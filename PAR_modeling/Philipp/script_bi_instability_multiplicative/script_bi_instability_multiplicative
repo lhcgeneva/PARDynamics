@@ -1,0 +1,137 @@
+#!/bin/bash
+echo
+echo -----------------------------------------------------------------
+echo 	Bash script: Region of bistability and linear instabilities 
+echo	in the two-variable PAR polarity model
+echo -----------------------------------------------------------------
+
+#-----------------------------------------------
+#	Parameter definitions
+#-----------------------------------------------
+
+alpha=1
+beta=2
+
+konP=0.0474
+koffP=0.0073
+
+konA=0.00858
+koffA=0.0054
+
+kPA=0.005
+kAP_initial=0.0002
+
+kPA_step=0.005
+kAP_step=0.0002
+
+kPA_limit=0.15
+kAP_limit=0.03
+
+loop_kPA=1
+loop_kAP=1
+
+rhoP=1
+rhoA=1.56
+
+DP=0.15
+DA=0.28
+
+L=134.6
+n=1		# n=0 performs linear stability analysis for the infinitely long system
+psi=0.174
+
+echo "psi	=	$psi"
+
+
+#------------------------------------------------
+# 	Creation of log file
+#------------------------------------------------
+mkdir -p ./run/
+cat > ./run/log_kPA_$kPA << EOF
+------------------------------------------------------------------
+Multiplicative crosstalk, alpha = $alpha, beta = $beta:
+------------------------------------------------------------------
+
+konP		= $konP
+koffP		= $koffP
+
+konA		= $konA
+koffA		= $koffA
+
+kPA initial 	= $kPA
+kAP initial 	= $kAP_initial
+
+kPA step length = $kPA_step
+kAP step length = $kAP_step
+
+maximum kPA 	= $kPA_limit
+maximum kAP	= $kAP_limit
+
+rhoP 		= $rhoP
+rhoA		= $rhoA
+
+DP		= $DP
+DA		= $DA
+
+system length = $L
+number of Fourier mode	= $n
+psi		= $psi
+
+Run:		./instability $alpha $beta $konP $koffP $konA $koffA $kPA $kAP_initial $kAP_step $kAP_limit $rhoP $rhoA $DP $DA $L $n $psi
+
+EOF
+
+while [ $loop_kPA -eq 1 ]
+do
+
+#----------------------------------------------
+# 	Run the program
+#----------------------------------------------
+
+./instability $alpha $beta $konP $koffP $konA $koffA $kPA $kAP_initial $kAP_step $kAP_limit $rhoP $rhoA $DP $DA $L $n $psi
+
+#----------------------------------------------------------------
+# 	Extract plotting information, organize files and file names
+#----------------------------------------------------------------
+
+cat bistability | awk '{ if($3==3) {print $1 "	" $2 "	" $3}  }' >> bistability_extract
+
+head -1 bistability_extract | awk '{print $1}' >> vector_bistability_kPA
+head -1 bistability_extract | awk '{print $2}' >> vector_bistability_lower_edge
+tail -1 bistability_extract | awk '{print $2}' >> vector_bistability_upper_edge
+
+rm bistability_extract
+
+
+cat ss01 | awk '{ if($3==1) {print $1 "	" $2 "	" $3}  }' >> ss01_extract
+
+head -1 ss01_extract | awk '{print $1}' >> vector_ss01_kPA
+head -1 ss01_extract | awk '{print $2}' >> vector_ss01_lower_edge
+tail -1 ss01_extract | awk '{print $2}' >> vector_ss01_upper_edge
+
+rm ss01_extract
+
+
+cat ss10 | awk '{ if($3==1) {print $1 "	" $2 "	" $3}  }' >> ss10_extract
+
+head -1 ss10_extract | awk '{print $1}' >> vector_ss10_kPA
+head -1 ss10_extract | awk '{print $2}' >> vector_ss10_lower_edge
+tail -1 ss10_extract | awk '{print $2}' >> vector_ss10_upper_edge
+
+rm ss10_extract
+
+
+#----------------------------------------------------------------
+# 	Organize files and file names
+#----------------------------------------------------------------
+
+mv bistability ./run/bistability_kPA_$kPA
+mv steady_states ./run/steady_states_kPA_$kPA
+mv ss10 ./run/ss10_kPA_$kPA
+mv ss01 ./run/ss01_kPA_$kPA
+
+echo kPA = $kPA
+
+kPA=$(echo $kPA $kPA_step | awk '{print $1+$2}')
+loop_kPA=$(echo $kPA $kPA_limit | awk '{if($1>$2){print -1} else{print 1}}')
+done
