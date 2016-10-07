@@ -34,11 +34,10 @@ classdef Fit < handle
     end
     
     methods
-        function Fi = Fit(fitData, showGraphs, pixelSize, fitType)
-            
+        function Fi = Fit(fitData, showGraphs, pixelSize, fitType)           
             Fi.pixelSize    = pixelSize;
             Fi.fitType      = fitType;
-            if nargin ~= 0;
+            if nargin ~= 0
                 middle = round(length(fitData)/2);
                 if mean(fitData(1:middle)) > mean(fitData(middle:end))
                     fitData = fliplr(fitData);
@@ -49,8 +48,7 @@ classdef Fit < handle
                 [Fi.gof, Fi.curve, Fi.out, Fi.error_code, Fi.mean_min, Fi.data_max, Fi.data_min,... 
                     Fi.curve_Nate, Fi.gof_Nate, Fi.data_Nate] = Fi.fit_grad(Fi.fitData, Fi.fitType,...
                                                  showGraphs, Fi.pixelSize);
-                [Fi.SNR, Fi.heightDiff]       = Fi.sigToNoise();
-                
+                [Fi.SNR, Fi.heightDiff]       = Fi.sigToNoise();    
             end
         end  
         [SNR, heightDiff] = sigToNoise(Fit);

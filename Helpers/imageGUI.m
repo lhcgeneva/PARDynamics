@@ -97,7 +97,7 @@ function updateSlider(handles)
 
 %get the current slice number which were stored in the figure axes
 sliceNum = getappdata(handles.imageAxes,'sliceNum');
-if(isempty(sliceNum))%may be empty if the figure has not been initialized
+if isempty(sliceNum) %may be empty if the figure has not been initialized
     sliceNum = 1;    %set it to a default
 end
 

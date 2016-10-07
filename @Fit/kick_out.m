@@ -1,4 +1,4 @@
-function maxFFTNorm = fourier_kick_out( Fit, PLOT )
+        function maxFFTNorm = kick_out( Fit, PLOT )
 %FOURIER_KICK_OUT Kicks out fit based on fourier transform of residuals
 %   Only takes into account residuals of gradient area. Tries to find
 %   systematic variations by performing an FFT and looking for the largest
@@ -28,8 +28,8 @@ function maxFFTNorm = fourier_kick_out( Fit, PLOT )
         end
     catch ME
         if (strcmp(ME.identifier,'MATLAB:badsubscript'))
-        disp(['S (', num2str(Fit.curve.s), ' C (', num2str(Fit.curve.c),...
-            'not fully in graph, setting nan']);
+        disp(['S (', num2str(Fit.curve.s), ') C (', num2str(Fit.curve.c),...
+            ') not fully in graph, setting nan']);
         Fit.maxFFTNorm = nan;
         maxFFTNorm = nan;
         end

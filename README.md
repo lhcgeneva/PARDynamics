@@ -25,7 +25,7 @@ Contains our own stochastic model, implements PAR reaction diffusion network as 
   - Need to use the right particle counts
   
 ### Mathematica_deterministic
-Contains some of the first Mathematica simulations of the system.
+Contains some of the early Mathematica simulations of the system.
 
 ### Philipp
 Part of Philipps parameter sweep.

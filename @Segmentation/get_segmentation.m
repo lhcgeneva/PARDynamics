@@ -96,6 +96,7 @@ for jj = 1 : Seg.sz_all(3)
         x_b{i} = x_bot;
         y_b{i} = y_bot; 
         end
+ 
     else disp([mode, ' is not a known segmentation mode.']);
     end
 end

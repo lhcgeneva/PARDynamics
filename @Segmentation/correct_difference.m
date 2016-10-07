@@ -11,6 +11,13 @@ sz = size(Seg.MergeBuff{1});
 center_im = [sz(1)/2, sz(2)/2];
 Seg.thresh_diff_c = Seg.thresh_diff;
 for i = 1 : Seg.sz_all(3)
+    if sum(~isnan(Seg.dist_mid_max{i})) < 0.2*length(Seg.dist_mid_diff{i})
+    disp(['Difference method not corrected, because maximum method ', ...
+          'almost empty. Setting Seg.thresh_diff_c to Seg.thresh_diff', ...
+          'in frame ', num2str(i), '.']);
+    Seg.thresh_diff_c{i} = Seg.thresh_diff{i};
+    return;
+    end
     for j = 1 : Seg.seg_prec
         theta = theta_list(j);
         a = [1,0,center_im(2); 0,1,center_im(1); 0,0,1];

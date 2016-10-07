@@ -28,6 +28,7 @@ for i = start_frame : stop_frame
     dlmwrite([num2str(i), '.txt'], naninterp(Seg.thresh_corr{i}));
 end
 Seg.curr_dir = temp;
+dlmwrite('straighten_line_thickness.txt', Seg.straighten_line_thickness);
 % In order to get Miji and straighten_ROI to run copy the
 % straighten_ROI.txt into Fiji's plugin folder (not macro folder!) and add
 % Fiji's script folder to the path like so addpath(genpath('/Applications/Fiji.app/scripts'));
