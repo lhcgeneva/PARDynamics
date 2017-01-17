@@ -14,10 +14,13 @@ properties
     diff_prec;
     sigma_prec;
     straighten_line_thickness; %Line thickness used in FIJI
+    look_up_table = [];
     %Other properties
     midpoint;
     majorRadius;
     minorRadius;
+    posteriorPos;
+    ROTATE = 1;         %Whether posterior should be rotated to start of outline
     thresh_limits;
     sz_all;         %Size 
     channels;       %Imaging channels
@@ -35,6 +38,7 @@ properties
     thresh_diff_c;  %Threshold as corrected using the maximum method
     thresh_final;   %Final outline produced by algorithm
     thresh_corr;    %User corrected final outline
+    thresh_rot;     %Rotated corrected final outline, posterior at beginning
     priority_order; %Order in which segmentations are used for final
     curr_dir;       %Current directory (base for all file operations
     saveImagingData;%Save or drop imaging data (stack) 
@@ -42,7 +46,7 @@ end
 
 methods
     function Seg = Segmentation(file, seg_prec, max_prec, diff_prec, ...
-                        sigma_prec, straighten_line_thickness)
+                        sigma_prec, straighten_line_thickness, look_up_table)
         if nargin > 0
             %% Assign constructor inputs to properties
             Seg.curr_dir        = pwd;
@@ -50,12 +54,13 @@ methods
             Seg.max_prec        = max_prec;
             Seg.diff_prec       = diff_prec;
             Seg.sigma_prec      = sigma_prec;
+            if nargin == 7; Seg.look_up_table = look_up_table; end
             Seg.thresh_limits   = [0.8, 1.1];
             Seg.priority_order  = [1, 2];
             Seg.straighten_line_thickness = straighten_line_thickness;
             Seg.merge_factor    = 3;
             Seg.saveImagingData = 'on';
-            Seg.load_data(file, 'internal');
+            Seg.load_data(file, 'internal_no_project'); %internal_project for projection of all cells
             %% Preallocate outline lists, run segmentation
             Seg.thresh_max{Seg.sz_all(3)}       = [];
             Seg.thresh_diff{Seg.sz_all(3)}      = [];
@@ -99,7 +104,7 @@ end
 
 methods(Static)
     [midpoint, minorRadius, majorRadius, g_handle, MergeBuff ] = ...
-                          define_geometry( MergeBuff, seedingMode );
+                          define_geometry( MergeBuff, seedingMode, look_up_table );
     dist                = dist_point_array(point, array);
     [out1,out2,out3]    = myginput(arg1, strpointertype); 
                           plot_kymo( Imr_s, s, ax );

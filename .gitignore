@@ -17,3 +17,6 @@ Thumbs.db
 *.swp
 .DS_Store
 *.m~
+
+bfg-1.12.12.jar
+Helpers/bfmatlab

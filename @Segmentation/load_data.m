@@ -37,7 +37,9 @@ function load_data(Seg, file, mode)
     end
     %% Set geometry (cursor input for mid point, radii)
     Seg.sz_all = size(Seg.Merge);
-    if strcmp(mode, 'internal')
+    if strcmp(mode, 'internal_no_project')
+        Seg.set_geometry();
+    elseif strcmp(mode, 'internal_project');
         Seg.set_geometry('PROJECT');
     %% Only works in single z-stack, z/t stacks not supported 
     elseif strcmp(mode, 'external') 

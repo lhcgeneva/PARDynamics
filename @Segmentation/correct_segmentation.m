@@ -17,11 +17,11 @@ end
 function segment(IsPropagated)
     x = Seg.thresh_corr{jj}(:, 1);
     y = Seg.thresh_corr{jj}(:, 2);
-    imshow(Seg.MergeBuff{jj}, []);
+    imshow(Seg.MergeBuff{jj},  Seg.look_up_table);
     hold on;
     i = 1;
     h = {};
-    if IsPropagated == 2
+    if IsPropagated == 2 || IsPropagated == 3
         sc = scatter(Seg.thresh_corr{jj}(:, 1), Seg.thresh_corr{jj}(:, 2), 'red', 'filled');
         plot(Seg.midpoint{jj}(1), Seg.midpoint{jj}(2), 'g.', 'MarkerSize', 20);
         freeHandSelectionHandle = imfreehand('Closed', false);
@@ -88,9 +88,9 @@ function segment(IsPropagated)
                 yi(i) = NaN;
             end
         end
+        
         Seg.thresh_corr{jj}(~isnan(xi),1) = xi(~isnan(xi));
         Seg.thresh_corr{jj}(~isnan(yi),2) = yi(~isnan(yi));
-        
 %         for i = 1:length(u)
 %             index = length(Seg.thresh_corr{jj}(:, 1))+1 - u(i);
 %             Seg.thresh_corr{jj}(index, 1) = mean(x_free(inds == u(i)));
@@ -121,8 +121,12 @@ function segment(IsPropagated)
         delete(sc);
         scatter(Seg.thresh_corr{jj}(:, 1), Seg.thresh_corr{jj}(:, 2), 'red', 'filled');
         unequal_inds = temp_thresh(:, 1) ~= Seg.thresh_corr{jj}(:, 1);
-        for i = jj+1:length(Seg.thresh_corr{jj}(:, 1))
-            Seg.thresh_corr{i}(unequal_inds, :) = Seg.thresh_corr{jj}(unequal_inds, :);
+        
+        % Propagate through all images
+        if IsPropagated == 2
+            for i = jj+1:length(Seg.thresh_corr{jj}(:, 1))
+                Seg.thresh_corr{i}(unequal_inds, :) = Seg.thresh_corr{jj}(unequal_inds, :);
+            end
         end
         %%%
 %         bds = bwboundaries(freeHandSelectionHandle.createMask);
@@ -142,7 +146,7 @@ function segment(IsPropagated)
                     x = Seg.thresh_corr{jj}(:, 1);
                     y = Seg.thresh_corr{jj}(:, 2);
     %                 clf;
-                    imshow(Seg.MergeBuff{jj}, []);
+                    imshow(Seg.MergeBuff{jj},  Seg.look_up_table);
                     hold on;
                     scatter(x, y, 20, 'red', 'filled');
                     plot(Seg.midpoint{jj}(1), Seg.midpoint{jj}(2), 'g.', 'MarkerSize', 20);

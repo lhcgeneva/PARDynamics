@@ -11,7 +11,7 @@ function plot_segmentations( Seg, frame, mode )
 
 figure(gcf);
 if sum(ismember(mode, 'IMAGE')) == 1
-    imshow(Seg.MergeBuff{frame},[]); 
+    imshow(Seg.MergeBuff{frame}, Seg.look_up_table); 
 end
 hold on;
 if sum(ismember(mode, 'MIDPOINT')) == 1;

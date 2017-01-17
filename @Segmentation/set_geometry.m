@@ -53,12 +53,13 @@ end
 if nargin == 1
     for jj = 1 : Seg.sz_all(3)
         [ Seg.midpoint{jj}, Seg.minorRadius{jj}, Seg.majorRadius{jj}, ...
-            Seg.MergeBuff{jj} ] = Seg.define_geometry( Seg.MergeBuff{jj}(:, :), 0 );
+          Seg.MergeBuff{jj}, Seg.posteriorPos{jj} ] = ...
+              Seg.define_geometry( Seg.MergeBuff{jj}(:, :), 0, Seg.look_up_table );
     end
 elseif nargin == 2
     if strcmp(mode, 'PROJECT')
         [ Seg.midpoint{1}, Seg.minorRadius{1}, Seg.majorRadius{1}, ...
-            ~ ] = Seg.define_geometry( zProj, 0 );
+            ~, Seg.posteriorPos{1} ] = Seg.define_geometry( zProj, 0, Seg.look_up_table );
         Seg.midpoint(:)     = Seg.midpoint(1);   
         Seg.minorRadius(:)  = Seg.minorRadius(1);
         Seg.majorRadius(:)  = Seg.majorRadius(1);

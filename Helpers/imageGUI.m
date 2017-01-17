@@ -22,7 +22,7 @@ function varargout = imageGUI(varargin)
 
 % Edit the above text to modify the response to help imageGUI
 
-% Last Modified by GUIDE v2.5 13-Jan-2016 17:51:11
+% Last Modified by GUIDE v2.5 10-Jan-2017 18:46:12
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -197,4 +197,14 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 sliceNum = getappdata(handles.imageAxes, 'sliceNum');
 handles.S.correct_segmentation(sliceNum, 2);
+guidata(hObject, handles)
+
+
+% --- Executes on button press in pushbutton7.
+function pushbutton7_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+sliceNum = getappdata(handles.imageAxes, 'sliceNum');
+handles.S.correct_segmentation(sliceNum, 3);
 guidata(hObject, handles)

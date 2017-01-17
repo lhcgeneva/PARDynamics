@@ -1,5 +1,5 @@
-function [ midpoint, minorRadius, majorRadius, MergeBuff ] = ...
-                                    define_geometry( MergeBuff, seedingMode )
+function [ midpoint, minorRadius, majorRadius, MergeBuff, posteriorPos ] = ...
+                                    define_geometry( MergeBuff, seedingMode, lut )
 %DEFINE_GEOMETRY determines midpoint and geometrical constraints of cell
 %   Depending on input parameters either tries to fit an ellipse to the
 %   cell or uses manual input by clicking on midpoint and minor and major
@@ -9,16 +9,17 @@ function [ midpoint, minorRadius, majorRadius, MergeBuff ] = ...
 if seedingMode == 0
     h = fspecial('gaussian', [10 10], 30);
     blurred = imfilter(MergeBuff,h,'replicate');
-    imagesc(blurred); shg; hold on;
-    title('Click on midpoint and on short and long axis membrane intersections.');
+    imshow(blurred, lut);
+    title('Click on midpoint and on short and long axis membrane intersections, as well as on the posterior pole.');
     axis equal;
     % Using a version of ginput from about 2005/6, cause most recent one
     % seems to be buggy (crosshair vanishes after as soon as ginput() is
     % called). Also, myginput allows cooler pointer ('crosshair').
-    [X, Y] = Segmentation.myginput(3, 'crosshair');
+    [X, Y] = Segmentation.myginput(4, 'crosshair');
     midpoint=[X(1); Y(1); 1];
     minorRadius=sqrt(sum([X(1) - X(2), Y(1) - Y(2)].^2));
     majorRadius=sqrt(sum([X(1) - X(3), Y(1) - Y(3)].^2));
+    posteriorPos=[X(4), Y(4)];
     % Swapping values in case majorRadius and minorRadius are clicked in 
     % the wrong order.
     if majorRadius < minorRadius 
@@ -26,7 +27,7 @@ if seedingMode == 0
         majorRadius = minorRadius; 
         minorRadius = t; 
     end
-    imshow(MergeBuff, []); hold on;
+% The following cannot define the posterior pole!
 elseif seedingMode == 1;
     [~, threshold] = edge(MergeBuff, 'roberts');
     fudgeFactor = 0.65;
