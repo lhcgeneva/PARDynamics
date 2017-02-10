@@ -54,11 +54,19 @@ function [DomainSize] = calc_domain_size(filename, showGraphs, savePic, botOffse
     if isempty(gcp('nocreate')); parpool(8, 'IdleTimeout', 600); end 
     parfor k = 1: length(info)
         r = fliplr(ProjectionRegisteredSmooth{k}(maxRegSmoothInd(k) - bot: end)');
-        Fr = Fit(r, showGraphs, 1);
+        try 
+            Fr = Fit(r, showGraphs, 1, 'err');
+            Fr_c(k) = Fr.curve.c;
+        catch
+            Fr_c(k) = nan;
+        end
         l = ProjectionRegisteredSmooth{k}(1:maxRegSmoothInd(k) + top);
-        Fl = Fit(l, showGraphs, 1);
-        Fr_c(k) = Fr.curve.c;
-        Fl_c(k) = Fl.curve.c;
+        try 
+            Fl = Fit(l, showGraphs, 1, 'err');
+            Fl_c(k) = Fl.curve.c;
+        catch
+            Fl_c(k) = nan;
+        end
     end
 
     %% Calculate domain size, plot

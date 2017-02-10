@@ -5,7 +5,7 @@ x_rad = 2;
 y_rad = 1;
 z_rad = y_rad;
 precision = 200;
-ang = 0;
+ang = 45;
 [x, y, z] = ellipsoid(0, 0, 0, x_rad, y_rad, z_rad, precision);
 S = sigmf(x, [-x_rad, 0]);
 S1 = sigmf(x+0*y + 0*z, [-x_rad, 0]);
@@ -59,9 +59,14 @@ S_data = [S(lin_ind_pos(1:end-1)); flipud(S(lin_ind_neg))];
 toc
 %% Plot initial ellipsoid, rotated ellipsoid, interpolated data
 figure(1)
+% Plot untilted ellipsoid
 subplot(2, 2, 1);
 surf(x, y, z, S, 'EdgeColor','none','LineStyle','none','FaceLighting','phong');
+colormap('jet')
 axis equal
+set(gca,'fontsize',15)
+axis equal
+% Plot tilted ellipsoid with imaging plane
 subplot(2, 2, 2);
 hold on;
 surf(x_rotated, y_rotated, z_rotated, S, 'EdgeColor','none','LineStyle','none','FaceLighting','phong');
@@ -74,9 +79,29 @@ surf(X, -Y, zeros(size(X)),'EdgeColor','none','LineStyle','none','FaceLighting',
 surf(-X, -Y, zeros(size(X)),'EdgeColor','none','LineStyle','none','FaceLighting','phong');
 whitebg('black')
 axis equal
+axis tight
+box off
+a = gca;
+a.XColor = [0.98, 0.844, 0.16];
+a.YColor = [0.98, 0.844, 0.16];
+a.ZColor = [0.98, 0.844, 0.16];
 view(3);
+set(gca,'fontsize',15)
 subplot(2, 2, 3); 
-plot(S_data);
+plot(S_data(1:end-1), 'LineWidth', 3, 'Color',[0 0.35 1]);
 set(gcf,'color','black')
+set(gca,'fontsize',15)
+xlabel('Position along embryo (a.u.)');
+ylabel('Concentration (a.u.)');
+box off
+a = gca;
+a.XColor = [0.98, 0.844, 0.16];
+a.YColor = [0.98, 0.844, 0.16];
+% Set colormap
+f = gcf;
+f.Colormap(:, 1) = linspace(0, 1, 64);
+f.Colormap(:, 3) = linspace(1, 0, 64);
+f.Colormap(:, 2) = zeros(64, 1);
+f.Colormap(:, 2) = 0.35*ones(64, 1);
 %% Compute distance between points to correct for curvature
 P = [ points_rotated(:,lin_ind_pos(1:end-1)), fliplr(points_rotated(:,lin_ind_neg(1:end))), ];
