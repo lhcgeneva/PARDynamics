@@ -11,21 +11,21 @@ public class ParforProgressMonitor {
      * Create a "server" progress monitor - this runs on the desktop client and
      * pops up the progress monitor UI.
      */
-    public static ProgServer createServer( String s, int N ) 
+    public static ProgServer createServer( String s, int N, int progressStepSize, int width, int height )
         throws IOException {
-        ProgServer ret = new ProgServer( s, N );
+        ProgServer ret = new ProgServer( s, N, progressStepSize, width, height );
         ret.start();
         return ret;
     }
-    
+
     /**
      * Create a "worker" progress monitor - runs on the remote lab and sends updates
      */
-    public static ProgWorker createWorker( String host, int port ) 
+    public static ProgWorker createWorker( String host, int port )
         throws IOException {
         return new ProgWorker( host, port );
     }
- 
+
     /**
      * Common interface exposed by both objects
      */
@@ -33,7 +33,7 @@ public class ParforProgressMonitor {
         public void increment();
         public void done();
     }
-   
+
     /**
      * The worker-side object. Simply connects to the server to indicate that a
      * quantum of progress has been made. This is a very basic implementation -
@@ -48,7 +48,7 @@ public class ParforProgressMonitor {
             fHost = host;
             fPort = port;
         }
-        
+
         /**
          * Connect and disconnect immediately to indicate progress
          */
@@ -67,7 +67,7 @@ public class ParforProgressMonitor {
         public void done() {
         }
     }
-    
+
     /**
      * The client-side object which pops up a window with a
      * JProgressBar. Accepts connections from the workers, and then disconnects
@@ -78,21 +78,26 @@ public class ParforProgressMonitor {
         private JFrame fFrame;
         private JProgressBar fBar;
         private ServerSocket fSocket;
-        private int fValue;
+        private int fValue, fN, fStep;
+        private String title;
         private Thread fThread;
         private AtomicBoolean fKeepGoing;
-        
-        private ProgServer( String s, int N ) throws IOException {
+
+        private ProgServer( String s, int N, int progressStepSize, int width, int height ) throws IOException {
             // The UI
             fFrame = new JFrame( s );
             fBar   = new JProgressBar( 0, N );
             fFrame.getContentPane().add( fBar );
             fFrame.pack();
+			fFrame.setSize(width,height);
             fFrame.setLocationRelativeTo( null );
             fFrame.setVisible( true );
 
             // How far we are through - requires synchronized access
             fValue = 0;
+			fN = N;
+			fStep = progressStepSize;
+			title = s;
 
             // Get an anonymous port
             fSocket = new ServerSocket( 0 );
@@ -106,12 +111,12 @@ public class ParforProgressMonitor {
             // Used to indicate to fThread when it's time to go
             fKeepGoing = new AtomicBoolean( true );
         }
-        
+
         /**
          * Don't start the Thread in the constructor
          */
         public void start() { fThread.start(); }
-           
+
         /**
          * Loop over accepting connections and updating
          */
@@ -137,7 +142,7 @@ public class ParforProgressMonitor {
             } catch( SocketTimeoutException timeout ) {
                 // don't care about timeouts
                 return;
-            } 
+            }
             worker.close();
             increment();
         }
@@ -149,7 +154,9 @@ public class ParforProgressMonitor {
         private void updateBar( final int newVal ) {
             SwingUtilities.invokeLater( new Runnable() {
                     public void run() {
-                        fBar.setValue( newVal );
+                        fBar.setValue( fStep*newVal );
+                        double percentage = 100.0*fStep*newVal/fN;
+                        fFrame.setTitle(title + (int)percentage + "% completed.");
                         if ( newVal == fBar.getMaximum() ) {
                             done();
                         }
@@ -163,7 +170,7 @@ public class ParforProgressMonitor {
         public int getPort() {
             return ((InetSocketAddress)fSocket.getLocalSocketAddress()).getPort();
         }
-        
+
         /**
          * Provide public access to this for pool-close PARFORs
          */

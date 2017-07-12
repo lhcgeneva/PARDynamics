@@ -11,16 +11,16 @@ function Simulation = PARsRDv1_0(name, numDom, BoundaryC, simparams, params)
 
 if nargin > 3
     totalT  = simparams.totalT;
-    %Either variable or fix bin size
+%     Either variable or fix bin size
 %     if keepBinSize
 %         bins = params.L/1;%1 micron/bin
-%         boundPos = bins/2;
+%         boundPos = round(bins/2);
 %     else
 %         bins = simparams.bins;
 %         simparams.boundPos;
 %     end
     bins    = params.bins;
-    boundPos= bins/2;
+    boundPos= round(bins/2);
     L       = params.L;
     psi     = params.psi;
     J       = params.J;
@@ -36,6 +36,7 @@ if nargin > 3
     kcA     = params.kcA; % A + alpha*B > Acyto + alpha*B
     kcB     = params.kcB; % B + beta*A > Bcyto + beta*A
     p       = params.p; % Percentage of membrane taken by B in beginning
+    ratioAB = params.ratioAB;
 else
     totalT = 10; % Total simulation time
     bins = 100; % Discretization bins
@@ -57,12 +58,12 @@ else
     kcA     = 0.19; % A + alpha*B > Acyto + alpha*B
     kcB     = 2; % B + beta*A > Bcyto + beta*A
     p       = 0; % Percentage of membrane taken by B in beginning
+    ratioAB = 1.56;
 end
 
 % 
 
 J = J * 0.60221413; % Normalisation factor equal [PAR-2] in N / um^3
-ratioAB = 1.56;
 Bconc = Bconc * 0.60221413; %  nM to N / um^3
 Aconc = Bconc * ratioAB; % Aconc calculated from PAR2/6 ratio
 
@@ -76,6 +77,9 @@ totalV = totalS / psi; % Total volume (assuming
 
 dA = DA/h^2;
 dB = DB/h^2;
+% The below adjustment for the on rate is per compartment. Check out how on
+% rate is summed for every compartment below, if in doubt about S/V
+% conversion
 konA = konA * Si / totalV; % Adjust for concentration to N conversion
 konB = konB * Si / totalV; % Adjust for concentration to N conversion
 kcA = kcA / J^alpha / Si^alpha; % Adjust for concentration to N conversion
@@ -165,7 +169,7 @@ while t < totalT
     onBsum = cumsum(onB);
 
     
-    %%%PERIODIC BOUNDARY CONDITIONS%%%
+    %%%PERIODIC OR REFLECTIVE BOUNDARY CONDITIONS%%%
     if strcmp(BoundaryC, 'PER')
         difAR = cumsum(difA(1:end));
         difAL = cumsum(difA(1:end));

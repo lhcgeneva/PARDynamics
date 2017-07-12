@@ -7,7 +7,7 @@ classdef Simulations < handle
         param_table_summary;
         param_table_full;
         num_runs = 10;       %Number of runs per dataset
-        keepBinSize; %0 If Bin size is fix, 1 if bin size changes depending on system size
+        keepBinSize=1; %0 If Bin size is fix, 1 if bin size changes depending on system size
         numTpoints;
         SimulationCell;     %Contains simulation structures.
         params;
@@ -44,6 +44,7 @@ classdef Simulations < handle
                 Simu.params.kcA      = 0.19; % A + alpha*B > Acyto + alpha*B
                 Simu.params.kcB      = 2; % B + beta*A > Bcyto + beta*A
                 Simu.params.p        = 0.0;
+                Simu.params.ratioAB  = 1.56;
                 
                 Simu.num_runs = num_runs;
                 Simu.Param_list = Param_list;

@@ -2,7 +2,6 @@ userpath('/Users/hubatsl/Desktop/P_lineage_Analysis/PARDynamics');
 addpath(genpath('/Users/hubatsl/Desktop/P_lineage_Analysis'));
 addpath(genpath('/Users/hubatsl/Desktop/PAR_Stochastic_Reaction_Diffusion'));
 addpath(genpath('/Users/hubatsl/Desktop/SPT/Us/SPT'));
-javaaddpath '/Users/hubatsl/Desktop/P_lineage_analysis/PARDynamics/PAR_modeling/PAR_Stochastic_Reaction_Diffusion/3rdParty/ParforProgMon'
 
 %   To get FIJI functionality either add Fiji.app to path (Fiji.app has
 %   a .jar called mij-1.3.6-fiji2.jar (or similar depending on the version

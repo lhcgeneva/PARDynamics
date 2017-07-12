@@ -39,7 +39,7 @@ function load_data(Seg, file, mode)
     Seg.sz_all = size(Seg.Merge);
     if strcmp(mode, 'internal_no_project')
         Seg.set_geometry();
-    elseif strcmp(mode, 'internal_project');
+    elseif strcmp(mode, 'PROJECT');
         Seg.set_geometry('PROJECT');
     %% Only works in single z-stack, z/t stacks not supported 
     elseif strcmp(mode, 'external') 

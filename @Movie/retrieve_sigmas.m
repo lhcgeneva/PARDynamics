@@ -21,6 +21,9 @@ function S = retrieve_sigmas(Mo, retrievingRange)
         QueryLengths = Mo.folder.Imr_s{1}([end-retrievingRange(1),...
                                             end-retrievingRange(2),...
                                             end-retrievingRange(3)]);
+        if length(retrievingRange) ~= 3
+            disp('Lengths not properly calculated in retrieve_sigams.m!');
+        end
         sz = cellfun(@size, QueryLengths, 'UniformOutput', false);
         %Only use the sizes which actually had a sigma that's not nan!!!
         %Otherwise the length average is off in the end

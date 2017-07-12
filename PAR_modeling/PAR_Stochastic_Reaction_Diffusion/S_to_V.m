@@ -33,9 +33,8 @@ elseif strcmp(mode, 'Axes')
     [~, e] = ellipke((1-shortAxis.^2./longAxis.^2));
     outpt2 = 4. * longAxis .* e; %Circumference
 else
-    disp('Haha, you can''t even get here!');
+    disp('Haha, you can''t even get here! :P');
 end
-
 
 end
 

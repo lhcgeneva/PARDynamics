@@ -16,8 +16,8 @@ else
         parpool(poolSize);
     end
 end
-pctRunOnAll javaaddpath('/Users/hubatsl/Desktop/P_lineage_analysis/GF_Algo/PAR_modeling/PAR_Stochastic_Reaction_Diffusion/3rdParty/ParforProgMon/')
-ppm = ParforProgMon( 'Parallel Simu', height(Simu.param_table_full) );    
+pctRunOnAll javaaddpath('/Users/hubatsl/Desktop/P_lineage_analysis/PARDynamics/PAR_modeling/PAR_Stochastic_Reaction_Diffusion/3rdParty/DylanMuir-ParforProgMon-6d469b1/java/')
+ppm = ParforProgMon( 'Simulating in parallel... ', height(Simu.param_table_full) );    
 s_array = cell(height(Simu.param_table_full), 1);
 parfor i = 1 : height(Simu.param_table_full);
     params = table2struct(Simu.param_table_full(i, 2:end));
@@ -25,6 +25,6 @@ parfor i = 1 : height(Simu.param_table_full);
                             Simu.simparams.BoundaryC, Simu.simparams, params);
     ppm.increment();
 end
-Simulation_cell = reshape(s_array, height(Simu.param_table_summary), Simu.num_runs);
+Simu.SimulationCell = reshape(s_array, height(Simu.param_table_summary), Simu.num_runs);
 end
 

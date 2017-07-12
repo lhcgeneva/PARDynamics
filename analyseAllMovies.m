@@ -60,7 +60,7 @@ WTP2_P0_Maintenance_NG43_PH = Experiment({'FIJI', 'Movies', 'WT', 'PAR2', 'P0', 
 WTP2_P0_Maintenance_NG43_SP = Experiment({'FIJI', 'Movies', 'WT', 'PAR2', 'P0', 'NG0043', 'RT', 'SP', 'Maintenance'}, 'off', isParallel, pixelSize_SD60x2fold);
 WTP2_P0_Maintenance_NG18_PH = Experiment({'FIJI', 'Movies', 'WT', 'PAR2', 'P0', 'NG0018', 'RT', 'PH', 'Maintenance'}, 'off', isParallel, pixelSize_SD60x2fold);
 WTP2_P0_Maintenance_NG18_SP = Experiment({'FIJI', 'Movies', 'WT', 'PAR2', 'P0', 'NG0018', 'RT', 'SP', 'Maintenance'}, 'off', isParallel, pixelSize_SD60x2fold);
-%% 10 °C
+%% 10
 WTP2_P0_Maintenance_TH129_10DEG_PH = Experiment({'FIJI', 'Movies', 'WT', 'PAR2', 'P0', 'TH129', '10DEG', 'PH', 'Maintenance'}, 'off', isParallel, pixelSize_SD60x2fold);
 WTP2_P0_Maintenance_TH129_10DEG_SP = Experiment({'FIJI', 'Movies', 'WT', 'PAR2', 'P0', 'TH129', '10DEG', 'SP', 'Maintenance'}, 'off', isParallel, pixelSize_SD60x2fold);
 %% PAR2 IMA3
