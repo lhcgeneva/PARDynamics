@@ -37,8 +37,12 @@ classdef Z3D < handle
                 %Create all segmentations
                 this.SegmentationCell{this.numTPoints} = Segmentation();
                 for tPoint = 1 : this.numTPoints
-                    stack = {this.stackCell{1}(:, :, :, tPoint), ...
-                                this.stackCell{2}(:, :, :, tPoint)};
+                    if length(this.stackCell)==1
+                        stack = {this.stackCell{1}(:, :, :, tPoint)};
+                    elseif length(this.stackCell)==2
+                        stack = {this.stackCell{1}(:, :, :, tPoint), ...
+                                    this.stackCell{2}(:, :, :, tPoint)};
+                    end
                     this.SegmentationCell{tPoint}  = Segmentation(stack,...
                                                             40, 10, 10, 20, 20);
                 end
@@ -46,7 +50,7 @@ classdef Z3D < handle
                 %because triangulation takes time, which is annoying if one
                 %segments a long movie. This way, all segs are done at
                 %once.
-                if isempty(gcp('nocreate')); parpool(8, 'IdleTimeout', 600); end 
+                if isempty(gcp('nocreate')); parpool(4, 'IdleTimeout', 600); end 
                 parfor tPoint = 1 : this.numTPoints
                     TriangulationCell_copy{tPoint} =this.zTriangulation(tPoint);
                 end   

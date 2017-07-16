@@ -2,7 +2,7 @@ function write_images(Seg, subfolder, image_cell, tiff_style, filename )
 %WRITE_PADDED_IMAGES writes padded images to disk
 %   Images were padded to make square for rotation and easier handling
 
-if strcmp(tiff_style, 'SINGLE');
+if strcmp(tiff_style, 'SINGLE')
     mkdir(subfolder);
     try
         for jj = 1 : length(image_cell)
@@ -12,7 +12,7 @@ if strcmp(tiff_style, 'SINGLE');
     catch
         disp(['Writing interrupted at image no. ', num2str(jj)]);
     end
-elseif strcmp(tiff_style, 'STACK');
+elseif strcmp(tiff_style, 'STACK')
     %Get straightening thickness, abort if not all the same
     s = cellfun(@(x) min(size(x)), image_cell);
     s = s(s~=0);

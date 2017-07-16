@@ -35,6 +35,8 @@ function load_data(Seg, file, mode)
         disp('Class Segmentation: wrong input format.');
         return;
     end
+    %% Provide empty second channel, in case only one channel was given
+    Seg.channels{2} = {};
     %% Set geometry (cursor input for mid point, radii)
     Seg.sz_all = size(Seg.Merge);
     if strcmp(mode, 'internal_no_project')

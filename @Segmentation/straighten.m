@@ -26,10 +26,16 @@ Seg.write_images('temp', input, 'SINGLE', 'in');
 cd('/Users/hubatsl/temp');
 
 % Rotate, so posterior is where straightened line starts
-for i = start_frame : stop_frame
-    temp_diff = Seg.thresh_corr{i}-repmat(Seg.posteriorPos{i}, [100,1]);
-    [~, ind] = min(temp_diff(:, 1).^2+temp_diff(:, 2).^2);
-    Seg.thresh_rot{i} = [Seg.thresh_corr{i}(ind:end, :); Seg.thresh_corr{i}(1:ind-1, :)];
+if Seg.ROTATE == 1
+    for i = start_frame : stop_frame
+        if isequal(size(Seg.posteriorPos), [1 1])
+            temp_diff = Seg.thresh_corr{i}-repmat(Seg.posteriorPos{1}, [Seg.seg_prec,1]);
+        else 
+            temp_diff = Seg.thresh_corr{i}-repmat(Seg.posteriorPos{i}, [Seg.seg_prec,1]);
+        end
+        [~, ind] = min(temp_diff(:, 1).^2+temp_diff(:, 2).^2);
+        Seg.thresh_rot{i} = [Seg.thresh_corr{i}(ind:end, :); Seg.thresh_corr{i}(1:ind-1, :)];
+    end
 end
 % Interpolate points that are nan, either use rotated or unrotated outline,
 % Add first point of circumference to end of circumference, to straighten
@@ -48,6 +54,7 @@ dlmwrite('straighten_line_thickness.txt', Seg.straighten_line_thickness);
 % In order to get Miji and straighten_ROI to run copy the
 % straighten_ROI.txt into Fiji's plugin folder (not macro folder!) and add
 % Fiji's script folder to the path like so addpath(genpath('/Applications/Fiji.app/scripts'));
+% Also make sure to have mij.jar in Applications/Fiji.app/jars/
 evalc('Miji(false);'); %Miji is wrapped in evalc to suppress unnecessary output
 MIJ.run('straighten ROI');
 cd('/Users/hubatsl/temp_out');
