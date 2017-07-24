@@ -58,7 +58,7 @@ methods
             Seg.thresh_limits   = [0.8, 1.1];
             Seg.priority_order  = [1, 2];
             Seg.straighten_line_thickness = straighten_line_thickness;
-            Seg.merge_factor    = 20;
+            Seg.merge_factor    = 2;
             Seg.saveImagingData = 'on';
             Seg.load_data(file, 'PROJECT'); %internal_project for projection of all cells
             %% Preallocate outline lists, run segmentation

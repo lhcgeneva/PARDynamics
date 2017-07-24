@@ -63,5 +63,9 @@ for i = start_frame : stop_frame
 end
 rmdir('/Users/hubatsl/temp', 's');
 rmdir('/Users/hubatsl/temp_out', 's');
-cd(curr);
+try
+    cd(curr);
+catch
+    cd('/Users/hubatsl/Desktop');
+end
 end

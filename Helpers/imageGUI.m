@@ -156,15 +156,13 @@ handles.S.plot_segmentations(imageNum, { 'MIDPOINT', 'IMAGE', 'CORR'});
 
 %store image data and slice number in axes
 setappdata(handles.imageAxes, 'image',     image);
-setappdata(handles.imageAxes, 'sliceNum',  imageSlider_value);
+setappdata(handles.imageAxes, 'sliceNum',  imageNum);
 
 % --- Executes during object creation, after setting all properties.
 function imageSlider_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to imageSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-
-% Hint: slider controls usually have a light gray background.
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end

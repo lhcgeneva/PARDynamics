@@ -13,18 +13,23 @@ for j = 1:dimensions(2)
         I = cat(3,A'/max(max(A)),B'/max(max(B)),zeros(size(A')));
         I(:, :, 3) = 0.5;
         subplot(3, 5, i);
-        c = imfuse(A.', B.','falsecolor','Scaling','joint','ColorChannels','red-cyan')
+        c = imfuse(A.', B.','falsecolor','Scaling','joint','ColorChannels','red-cyan');
         imshow(c);
         axis square;
     end
 end
 %%
-A_tt = {s.A}
-B_tt = {s.B};
-A = mean(cat(3, A_tt{:}), 3);
-B = mean(cat(3, B_tt{:}), 3);
-I = cat(3,A'/max(max(A)),B'/max(max(B)),zeros(size(A')));
-I(:, :, 3) = 0.5;
-c = imfuse(A.', B.','falsecolor','Scaling','joint','ColorChannels','red-cyan')
-imshow(c);
-axis square;
+% for i = 1:length(S.SimulationCell)
+    s = S.SimulationCell{1}
+    A_tt = {s.A}
+    B_tt = {s.B};
+    A = mean(cat(3, A_tt{:}), 3);
+    B = mean(cat(3, B_tt{:}), 3);
+    I = cat(3,A'/max(max(A)),B'/max(max(B)),zeros(size(A')));
+    I(:, :, 3) = 0.5;
+    figure
+    c = imfuse(A.', B.','falsecolor','Scaling','joint','ColorChannels','red-cyan')
+    imshow(c);
+    axis square;
+    tightfig;
+% end
