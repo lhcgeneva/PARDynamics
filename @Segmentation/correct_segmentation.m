@@ -48,7 +48,10 @@ Seg.thresh_corr{sliceNum}(~isnan(yi),2) = yi(~isnan(yi));
 delete(sc);
 scatter(Seg.thresh_corr{sliceNum}(:, 1), Seg.thresh_corr{sliceNum}(:, 2),...
         'red', 'filled');
-unequal_inds = temp_thresh(:, 1) ~= Seg.thresh_corr{sliceNum}(:, 1);
+% Get points that have changed. Need to check for has x OR y
+% changed, as for points at (90, 180, 270, 360)deg x or y remains the same
+unequal_inds = ((temp_thresh(:, 1) ~= Seg.thresh_corr{sliceNum}(:, 1)))|...
+                ((temp_thresh(:, 2) ~= Seg.thresh_corr{sliceNum}(:, 2)));
 
 % Propagate through all images
 if IsPropagated
@@ -56,22 +59,22 @@ if IsPropagated
         Seg.thresh_corr{i}(unequal_inds, :) = Seg.thresh_corr{sliceNum}(unequal_inds, :);
     end
 end
-if ~isempty(h)
-    for i = 1:length(h)
-        Seg.thresh_corr{sliceNum}(h(i).index, :) = h(i).handle.getPosition();
-        if IsPropagated
-            try
-                for j = 1:length(Seg.thresh_corr)-sliceNum
-                    d = hypot(Seg.thresh_corr{sliceNum}(h(i).index, 1) - Seg.thresh_corr{sliceNum+j}(h(i).index, 1),...
-                            Seg.thresh_corr{sliceNum}(h(i).index, 2) - Seg.thresh_corr{sliceNum+j}(h(i).index, 2));
-                    if d > 2.5 || isnan(d)
-                        Seg.thresh_corr{sliceNum+j}(h(i).index, :) = Seg.thresh_corr{sliceNum}(h(i).index, :);
-                    end
-                end
-            catch
-                disp('End of stack reached');
-            end
-        end
-    end
-end 
+% if ~isempty(h)
+%     for i = 1:length(h)
+%         Seg.thresh_corr{sliceNum}(h(i).index, :) = h(i).handle.getPosition();
+%         if IsPropagated
+%             try
+%                 for j = 1:length(Seg.thresh_corr)-sliceNum
+%                     d = hypot(Seg.thresh_corr{sliceNum}(h(i).index, 1) - Seg.thresh_corr{sliceNum+j}(h(i).index, 1),...
+%                             Seg.thresh_corr{sliceNum}(h(i).index, 2) - Seg.thresh_corr{sliceNum+j}(h(i).index, 2));
+%                     if d > 2.5 || isnan(d)
+%                         Seg.thresh_corr{sliceNum+j}(h(i).index, :) = Seg.thresh_corr{sliceNum}(h(i).index, :);
+%                     end
+%                 end
+%             catch
+%                 disp('End of stack reached');
+%             end
+%         end
+%     end
+% end 
 end
