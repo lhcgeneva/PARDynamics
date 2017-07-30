@@ -83,7 +83,8 @@ set(handles.imageSlider, 'Min', 1);
 set(handles.imageSlider, 'SliderStep', [step step]);
 % set current value to the slice we are viewing
 set(handles.imageSlider, 'Value', getappdata(handles.imageAxes, 'sliceNum'));
-handles.imNumDisp.String = num2str(floor(get(handles.imageSlider, 'Value')));
+handles.imNumDisp.String = [num2str(floor(get(handles.imageSlider, 'Value'))),...
+                            '/', num2str(handles.numImages)];
 
 
 % --- Executes during object creation, after setting all properties.
@@ -100,7 +101,8 @@ function imageSlider_Callback(hObject, ~, handles)
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 % Get current value of the slider
 imageNum = floor(get(hObject,'Value'));
-handles.imNumDisp.String = num2str(imageNum);
+handles.imNumDisp.String = [num2str(imageNum),...
+                            '/', num2str(handles.numImages)];
 % read in image data
 image = handles.image(:, :, imageNum);
 % bring current axes in focus and show image
@@ -122,14 +124,14 @@ end
 % --- Executes on button press in freehand_prop.
 function freehand_prop_Callback(hObject, ~, handles)
 sliceNum = getappdata(handles.imageAxes, 'sliceNum');
-handles.S.correct_segmentation(sliceNum, 2);
+handles.S.correct_segmentation(sliceNum, 1);
 guidata(hObject, handles)
 
 
 % --- Executes on button press in freehand.
 function freehand_Callback(hObject, ~, handles)
 sliceNum = getappdata(handles.imageAxes, 'sliceNum');
-handles.S.correct_segmentation(sliceNum, 3);
+handles.S.correct_segmentation(sliceNum, 0);
 guidata(hObject, handles)
 
 
