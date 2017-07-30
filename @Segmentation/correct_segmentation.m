@@ -1,9 +1,7 @@
 function correct_segmentation( Seg, sliceNum, IsPropagated)
 %CORRECT_SEGMENTATION Displays segmentations, lets user make corrections
 %   Creates draggable points from outline lets user correct positions 
-imshow(Seg.MergeBuff{sliceNum},  Seg.look_up_table);
-hold on;
-h = {};
+imshow(Seg.MergeBuff{sliceNum},  Seg.look_up_table); hold on;
 sc = scatter(Seg.thresh_corr{sliceNum}(:, 1), Seg.thresh_corr{sliceNum}(:, 2),...
              'red', 'filled');
 plot(Seg.midpoint{sliceNum}(1), Seg.midpoint{sliceNum}(2), 'g.', 'MarkerSize', 20);
@@ -12,6 +10,7 @@ bds = freeHandSelectionHandle.getPosition;
 temp_thresh = Seg.thresh_corr{sliceNum};
 x_mid = Seg.midpoint{sliceNum}(1);
 y_mid = Seg.midpoint{sliceNum}(2);
+
 for i = 1:length(Seg.thresh_corr{sliceNum})
     try
         %%%Calculate point on the line midpoint-radial point which
@@ -48,8 +47,8 @@ Seg.thresh_corr{sliceNum}(~isnan(yi),2) = yi(~isnan(yi));
 delete(sc);
 scatter(Seg.thresh_corr{sliceNum}(:, 1), Seg.thresh_corr{sliceNum}(:, 2),...
         'red', 'filled');
-% Get points that have changed. Need to check for has x OR y
-% changed, as for points at (90, 180, 270, 360)deg x or y remains the same
+% Get points that have changed. Need to check whether x OR y have changed,
+% because for angles 90, 180, 270 and 360 deg x or y remains the same.
 unequal_inds = ((temp_thresh(:, 1) ~= Seg.thresh_corr{sliceNum}(:, 1)))|...
                 ((temp_thresh(:, 2) ~= Seg.thresh_corr{sliceNum}(:, 2)));
 
@@ -58,23 +57,5 @@ if IsPropagated
     for i = sliceNum+1:length(Seg.thresh_corr)
         Seg.thresh_corr{i}(unequal_inds, :) = Seg.thresh_corr{sliceNum}(unequal_inds, :);
     end
-end
-% if ~isempty(h)
-%     for i = 1:length(h)
-%         Seg.thresh_corr{sliceNum}(h(i).index, :) = h(i).handle.getPosition();
-%         if IsPropagated
-%             try
-%                 for j = 1:length(Seg.thresh_corr)-sliceNum
-%                     d = hypot(Seg.thresh_corr{sliceNum}(h(i).index, 1) - Seg.thresh_corr{sliceNum+j}(h(i).index, 1),...
-%                             Seg.thresh_corr{sliceNum}(h(i).index, 2) - Seg.thresh_corr{sliceNum+j}(h(i).index, 2));
-%                     if d > 2.5 || isnan(d)
-%                         Seg.thresh_corr{sliceNum+j}(h(i).index, :) = Seg.thresh_corr{sliceNum}(h(i).index, :);
-%                     end
-%                 end
-%             catch
-%                 disp('End of stack reached');
-%             end
-%         end
-%     end
-% end 
+end 
 end
