@@ -6,7 +6,7 @@ function varargout = imageGUI(varargin)
 %      H = IMAGEGUI returns the handle to a new IMAGEGUI or the handle to
 %      the existing singleton*.
 %
-%      IMAGEGUI('CALLBACK',hObject,eventData,handles,...) calls the local
+%      IMAGEGUI('CALLBACK',hObject,~,handles,...) calls the local
 %      function named CALLBACK in IMAGEGUI.M with the given input arguments.
 %
 %      IMAGEGUI('Property','Value',...) creates a new IMAGEGUI or raises the
@@ -22,7 +22,7 @@ function varargout = imageGUI(varargin)
 
 % Edit the above text to modify the response to help imageGUI
 
-% Last Modified by GUIDE v2.5 26-Jul-2017 23:53:55
+% Last Modified by GUIDE v2.5 30-Jul-2017 14:20:18
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -45,65 +45,60 @@ end
 
 
 % --- Executes just before imageGUI is made visible.
-function imageGUI_OpeningFcn(hObject, eventdata, handles, varargin)
+function imageGUI_OpeningFcn(hObject, ~, handles, varargin)
 % Choose default command line output for imageGUI
 handles.output = hObject;
 % Update handles structure
-handles.S = varargin{1};%evalin('base','S');%
+handles.S = varargin{1};
 handles.MergeBuff = handles.S.MergeBuff;
 handles.sz = size(handles.MergeBuff{1});
-handles.image = reshape([handles.MergeBuff{:}], handles.sz(1), handles.sz(2), length(handles.MergeBuff));
+handles.image = reshape([handles.MergeBuff{:}], handles.sz(1),...
+                        handles.sz(2), length(handles.MergeBuff));
 handles.numImages = length(handles.MergeBuff);
 updateSlider(handles);
 guidata(hObject, handles);
 handles.S.plot_segmentations(1, { 'MIDPOINT', 'IMAGE', 'CORR'});
 
 % --- Outputs from this function are returned to the command line.
-function varargout = imageGUI_OutputFcn(hObject, eventdata, handles) 
+function varargout = imageGUI_OutputFcn(hObject, ~, handles) 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 
 function updateSlider(handles)
 % This function updates the slider to have the correct min, max, value, and
-%   step size
-%get the current slice number which were stored in the figure axes
-sliceNum = getappdata(handles.imageAxes,'sliceNum');
-if isempty(sliceNum) %may be empty if the figure has not been initialized
-    sliceNum = 1;    %set it to a default
+% step size
+% Get the current slice number which was stored in the figure axes, may be
+% empty if the figure has not been initialized, in this case default to 1
+if isempty(getappdata(handles.imageAxes, 'sliceNum'))
+    setappdata(handles.imageAxes, 'sliceNum', 1);
 end
-%get the number written in the text box which is the maximum number of
-%images to be viewed
-NumImageslice = handles.numImages;
-%there are only NumImageslice - 1 images total, because we start at 1
-step = 1/(NumImageslice - 1);
+% there are only handles.numImages - 1 images total, because we start at 1
+step = 1/(handles.numImages - 1);
 if step == Inf; step = 1; end
-%set values for the slider bar
-set(handles.imageSlider, 'Max',        NumImageslice);
-set(handles.imageSlider, 'Min',        1);
+% set values for the slider bar
+set(handles.imageSlider, 'Max', handles.numImages);
+set(handles.imageSlider, 'Min', 1);
 set(handles.imageSlider, 'SliderStep', [step step]);
-%set current value to the slice we are viewing
-set(handles.imageSlider, 'Value', sliceNum);
+% set current value to the slice we are viewing
+set(handles.imageSlider, 'Value', getappdata(handles.imageAxes, 'sliceNum'));
+handles.imNumDisp.String = num2str(floor(get(handles.imageSlider, 'Value')));
 
 % --- Executes during object creation, after setting all properties.
-function numImages_CreateFcn(hObject, eventdata, handles)
+function numImages_CreateFcn(hObject, ~, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
 
 % --- Executes on slider movement.
-function imageSlider_Callback(hObject, eventdata, handles)
+function imageSlider_Callback(hObject, ~, handles)
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-%get the current value on the slider
-imageSlider_value = get(hObject,'Value');
-%get the current max value from the slider
-numImages = get(handles.imageSlider, 'Max');
-%calculate the image number to display
-imageNum = floor(imageSlider_value);
+% Get current value of the slider
+imageNum = floor(get(hObject,'Value'));
 handles.imNumDisp.String = num2str(imageNum);
-%read in image data
+% read in image data
 image = handles.image(:, :, imageNum);
-%bring current axes in focus and show image
+% bring current axes in focus and show image
 axes(handles.imageAxes);
 % handles.S.plot_segmentations(imageNum, { 'MIDPOINT', 'IMAGE', 'DIFF', 'DIFFC', 'FINAL'});
 handles.S.plot_segmentations(imageNum, { 'MIDPOINT', 'IMAGE', 'CORR'});
@@ -112,19 +107,46 @@ setappdata(handles.imageAxes, 'image',     image);
 setappdata(handles.imageAxes, 'sliceNum',  imageNum);
 
 % --- Executes during object creation, after setting all properties.
-function imageSlider_CreateFcn(hObject, eventdata, handles)
+function imageSlider_CreateFcn(hObject, ~, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
 
 % --- Executes on button press in freehand_prop.
-function freehand_prop_Callback(hObject, eventdata, handles)
+function freehand_prop_Callback(hObject, ~, handles)
 sliceNum = getappdata(handles.imageAxes, 'sliceNum');
 handles.S.correct_segmentation(sliceNum, 2);
 guidata(hObject, handles)
 
 % --- Executes on button press in freehand.
-function freehand_Callback(hObject, eventdata, handles)
+function freehand_Callback(hObject, ~, handles)
 sliceNum = getappdata(handles.imageAxes, 'sliceNum');
 handles.S.correct_segmentation(sliceNum, 3);
 guidata(hObject, handles)
+
+
+% --- Executes on button press in Difference.
+function Difference_Callback(hObject, eventdata, handles)
+% hObject    handle to Difference (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of Difference
+
+
+% --- Executes on button press in Maximum.
+function Maximum_Callback(hObject, eventdata, handles)
+% hObject    handle to Maximum (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of Maximum
+
+
+% --- Executes on button press in Corrected.
+function Corrected_Callback(hObject, eventdata, handles)
+% hObject    handle to Corrected (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of Corrected
