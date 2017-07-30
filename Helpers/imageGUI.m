@@ -22,7 +22,7 @@ function varargout = imageGUI(varargin)
 
 % Edit the above text to modify the response to help imageGUI
 
-% Last Modified by GUIDE v2.5 10-Jan-2017 18:46:12
+% Last Modified by GUIDE v2.5 26-Jul-2017 23:53:55
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -46,17 +46,9 @@ end
 
 % --- Executes just before imageGUI is made visible.
 function imageGUI_OpeningFcn(hObject, eventdata, handles, varargin)
-% This function has no output args, see OutputFcn.
-% hObject    handle to figure
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to imageGUI (see VARARGIN)
-
 % Choose default command line output for imageGUI
 handles.output = hObject;
-
 % Update handles structure
-
 handles.S = varargin{1};%evalin('base','S');%
 handles.MergeBuff = handles.S.MergeBuff;
 handles.sz = size(handles.MergeBuff{1});
@@ -65,42 +57,20 @@ handles.numImages = length(handles.MergeBuff);
 updateSlider(handles);
 guidata(hObject, handles);
 handles.S.plot_segmentations(1, { 'MIDPOINT', 'IMAGE', 'CORR'});
-% UIWAIT makes imageGUI wait for user response (see UIRESUME)
-% uiwait(handles.figure1);
-
 
 % --- Outputs from this function are returned to the command line.
 function varargout = imageGUI_OutputFcn(hObject, eventdata, handles) 
-% varargout  cell array for returning output args (see VARARGOUT);
-% hObject    handle to figure
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
 % Get default command line output from handles structure
 varargout{1} = handles.output;
-
-
-
-function numImages_Callback(hObject, eventdata, handles)
-% hObject    handle to numImages (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of numImages as text
-%        str2double(get(hObject,'String')) returns contents of numImages as a double
-
-updateSlider(handles);
 
 function updateSlider(handles)
 % This function updates the slider to have the correct min, max, value, and
 %   step size
-
 %get the current slice number which were stored in the figure axes
 sliceNum = getappdata(handles.imageAxes,'sliceNum');
 if isempty(sliceNum) %may be empty if the figure has not been initialized
     sliceNum = 1;    %set it to a default
 end
-
 %get the number written in the text box which is the maximum number of
 %images to be viewed
 NumImageslice = handles.numImages;
@@ -111,98 +81,50 @@ if step == Inf; step = 1; end
 set(handles.imageSlider, 'Max',        NumImageslice);
 set(handles.imageSlider, 'Min',        1);
 set(handles.imageSlider, 'SliderStep', [step step]);
-
 %set current value to the slice we are viewing
 set(handles.imageSlider, 'Value', sliceNum);
 
 % --- Executes during object creation, after setting all properties.
 function numImages_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to numImages (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
 
-
 % --- Executes on slider movement.
 function imageSlider_Callback(hObject, eventdata, handles)
-% hObject    handle to imageSlider (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
 %get the current value on the slider
 imageSlider_value = get(hObject,'Value');
-
 %get the current max value from the slider
 numImages = get(handles.imageSlider, 'Max');
-
 %calculate the image number to display
 imageNum = floor(imageSlider_value);
 handles.imNumDisp.String = num2str(imageNum);
 %read in image data
 image = handles.image(:, :, imageNum);
-
 %bring current axes in focus and show image
 axes(handles.imageAxes);
 % handles.S.plot_segmentations(imageNum, { 'MIDPOINT', 'IMAGE', 'DIFF', 'DIFFC', 'FINAL'});
 handles.S.plot_segmentations(imageNum, { 'MIDPOINT', 'IMAGE', 'CORR'});
-
 %store image data and slice number in axes
 setappdata(handles.imageAxes, 'image',     image);
 setappdata(handles.imageAxes, 'sliceNum',  imageNum);
 
 % --- Executes during object creation, after setting all properties.
 function imageSlider_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to imageSlider (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
 
-
-% --- Executes on button press in correctSegmentation.
-function correctSegmentation_Callback(hObject, eventdata, handles)
-% hObject    handle to correctSegmentation (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-sliceNum = getappdata(handles.imageAxes, 'sliceNum');
-handles.S.correct_segmentation(sliceNum, 0);
-guidata(hObject, handles)
-
-
-% --- Executes on button press in correctPropagate.
-function correctPropagate_Callback(hObject, eventdata, handles)
-% hObject    handle to correctPropagate (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-sliceNum = getappdata(handles.imageAxes, 'sliceNum');
-handles.S.correct_segmentation(sliceNum, 1);
-guidata(hObject, handles)
-
-
-% --- Executes on button press in pushbutton5.
-function pushbutton5_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton5 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+% --- Executes on button press in freehand_prop.
+function freehand_prop_Callback(hObject, eventdata, handles)
 sliceNum = getappdata(handles.imageAxes, 'sliceNum');
 handles.S.correct_segmentation(sliceNum, 2);
 guidata(hObject, handles)
 
-
-% --- Executes on button press in pushbutton7.
-function pushbutton7_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton7 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+% --- Executes on button press in freehand.
+function freehand_Callback(hObject, eventdata, handles)
 sliceNum = getappdata(handles.imageAxes, 'sliceNum');
 handles.S.correct_segmentation(sliceNum, 3);
 guidata(hObject, handles)
