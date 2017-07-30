@@ -1,4 +1,4 @@
-function correct_segmentation( Seg, sliceNum, IsPropagated, stand_alone )
+function correct_segmentation( Seg, sliceNum, IsPropagated)
 %CORRECT_SEGMENTATION Displays segmentations, lets user make corrections
 %   Creates draggable points from outline lets user correct positions 
 EXIT = 0; 
@@ -11,7 +11,8 @@ if nargin == 4
 elseif nargin == 3 
     jj = sliceNum;
     segment(IsPropagated);
-else disp('Wrong number of input parameters.');
+else
+    disp('Wrong number of input parameters.');
 end
 
 function segment(IsPropagated)

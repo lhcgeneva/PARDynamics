@@ -59,10 +59,12 @@ updateSlider(handles);
 guidata(hObject, handles);
 handles.S.plot_segmentations(1, { 'MIDPOINT', 'IMAGE', 'CORR'});
 
+
 % --- Outputs from this function are returned to the command line.
 function varargout = imageGUI_OutputFcn(hObject, ~, handles) 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
+
 
 function updateSlider(handles)
 % This function updates the slider to have the correct min, max, value, and
@@ -83,11 +85,14 @@ set(handles.imageSlider, 'SliderStep', [step step]);
 set(handles.imageSlider, 'Value', getappdata(handles.imageAxes, 'sliceNum'));
 handles.imNumDisp.String = num2str(floor(get(handles.imageSlider, 'Value')));
 
+
 % --- Executes during object creation, after setting all properties.
 function numImages_CreateFcn(hObject, ~, handles)
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+if ispc && isequal(get(hObject,'BackgroundColor'),...
+                   get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
 
 % --- Executes on slider movement.
 function imageSlider_Callback(hObject, ~, handles)
@@ -106,17 +111,20 @@ handles.S.plot_segmentations(imageNum, { 'MIDPOINT', 'IMAGE', 'CORR'});
 setappdata(handles.imageAxes, 'image',     image);
 setappdata(handles.imageAxes, 'sliceNum',  imageNum);
 
+
 % --- Executes during object creation, after setting all properties.
 function imageSlider_CreateFcn(hObject, ~, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
 
+
 % --- Executes on button press in freehand_prop.
 function freehand_prop_Callback(hObject, ~, handles)
 sliceNum = getappdata(handles.imageAxes, 'sliceNum');
 handles.S.correct_segmentation(sliceNum, 2);
 guidata(hObject, handles)
+
 
 % --- Executes on button press in freehand.
 function freehand_Callback(hObject, ~, handles)
@@ -126,27 +134,15 @@ guidata(hObject, handles)
 
 
 % --- Executes on button press in Difference.
-function Difference_Callback(hObject, eventdata, handles)
-% hObject    handle to Difference (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
+function Difference_Callback(hObject, ~, handles)
 % Hint: get(hObject,'Value') returns toggle state of Difference
 
 
 % --- Executes on button press in Maximum.
-function Maximum_Callback(hObject, eventdata, handles)
-% hObject    handle to Maximum (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
+function Maximum_Callback(hObject, ~, handles)
 % Hint: get(hObject,'Value') returns toggle state of Maximum
 
 
 % --- Executes on button press in Corrected.
-function Corrected_Callback(hObject, eventdata, handles)
-% hObject    handle to Corrected (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
+function Corrected_Callback(hObject, ~, handles)
 % Hint: get(hObject,'Value') returns toggle state of Corrected
