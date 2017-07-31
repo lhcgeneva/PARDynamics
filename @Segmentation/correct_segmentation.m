@@ -1,7 +1,7 @@
 function correct_segmentation( Seg, sliceNum, IsPropagated)
 %CORRECT_SEGMENTATION Displays segmentations, lets user make corrections
 %   Creates draggable points from outline lets user correct positions 
-imshow(Seg.MergeBuff{sliceNum},  Seg.look_up_table); hold on;
+imshow(Seg.MergeBuff{sliceNum},  Seg.lut); hold on;
 sc = scatter(Seg.thresh_corr{sliceNum}(:, 1), Seg.thresh_corr{sliceNum}(:, 2),...
              'red', 'filled');
 plot(Seg.midpoint{sliceNum}(1), Seg.midpoint{sliceNum}(2), 'g.', 'MarkerSize', 20);
@@ -10,7 +10,8 @@ bds = freeHandSelectionHandle.getPosition;
 temp_thresh = Seg.thresh_corr{sliceNum};
 x_mid = Seg.midpoint{sliceNum}(1);
 y_mid = Seg.midpoint{sliceNum}(2);
-
+xi = nan(1, length(Seg.thresh_corr{sliceNum}));
+yi = nan(1, length(Seg.thresh_corr{sliceNum}));
 for i = 1:length(Seg.thresh_corr{sliceNum})
     try
         %%%Calculate point on the line midpoint-radial point which
@@ -32,13 +33,9 @@ for i = 1:length(Seg.thresh_corr{sliceNum})
         if ~isempty(xtemp)
             xi(i) = xtemp(1);
             yi(i) = ytemp(1);
-        else
-            xi(i) = NaN;
-            yi(i) = NaN;
         end
     catch
-        xi(i) = NaN;
-        yi(i) = NaN;
+        disp('Check correct_segmentation(), error in manually setting point.');
     end
 end
 

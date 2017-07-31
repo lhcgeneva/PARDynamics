@@ -1,4 +1,4 @@
-function plot_kymo( Imr_s, straighten_line_thickness, ax )
+function plot_kymo( Imr_s, lineThick, ax )
 %PLOT_KYMO Plots kymograph of Imr_s
 %   Uses straightened profiles saved in object to plot kymograph and
 %   membrane intensity over time
@@ -6,10 +6,10 @@ function plot_kymo( Imr_s, straighten_line_thickness, ax )
 
 %% Plot kymograph of straightened lines
 maximum_length = max(cellfun(@(x) max(size(x)), Imr_s));
-im = zeros(length(Imr_s) * straighten_line_thickness, maximum_length);
+im = zeros(length(Imr_s) * lineThick, maximum_length);
 for j = 1 : length(Imr_s)  
     for i = 1:length(Imr_s{1})
-        im((i-1)*straighten_line_thickness+1:i*straighten_line_thickness,...
+        im((i-1)*lineThick+1:i*lineThick,...
             1:length(Imr_s{j}{i})) = Imr_s{j}{i};
     end
     if nargin == 2

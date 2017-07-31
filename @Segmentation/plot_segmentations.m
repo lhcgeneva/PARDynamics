@@ -11,14 +11,14 @@ function plot_segmentations( Seg, frame, mode )
 
 figure(gcf);
 if sum(ismember(mode, 'IMAGE')) == 1
-    imshow(Seg.MergeBuff{frame}, Seg.look_up_table); 
+    imshow(Seg.MergeBuff{frame}, Seg.lut); 
 end
 hold on;
-if sum(ismember(mode, 'MIDPOINT')) == 1;
+if sum(ismember(mode, 'MIDPOINT')) == 1
     plot(Seg.midpoint{frame}(1), Seg.midpoint{frame}(2), 'g.', ...
             'MarkerSize', 15);
 end
-if ~isempty(Seg.thresh_limits) && sum(ismember(mode, 'LIMITS')) == 1;    
+if ~isempty(Seg.thresh_limits) && sum(ismember(mode, 'LIMITS')) == 1   
     ang = 0 : 0.01 : 2*pi;
     rad = 180/pi;
     x_coo = Seg.midpoint{frame}(1) + ...
@@ -32,26 +32,26 @@ if ~isempty(Seg.thresh_limits) && sum(ismember(mode, 'LIMITS')) == 1;
             Seg.thresh_limits(2)*Seg.majorRadius{frame}*sin(ang * rad);
     plot(x_coo, y_coo, 'r', 'LineWidth', 1);
 end
-if ~isempty(Seg.thresh_max{frame}) && sum(ismember(mode, 'MAX')) == 1;
+if ~isempty(Seg.thresh_max{frame}) && sum(ismember(mode, 'MAX')) == 1
     plot(Seg.thresh_max{frame}(:, 1), Seg.thresh_max{frame}(:, 2), 'k.', ...
             'MarkerSize', 15);
 end
-if ~isempty(Seg.thresh_diff{frame}) && sum(ismember(mode, 'DIFF')) == 1;
+if ~isempty(Seg.thresh_diff{frame}) && sum(ismember(mode, 'DIFF')) == 1
     plot(Seg.thresh_diff{frame}(:, 1), Seg.thresh_diff{frame}(:, 2), 'b.', ...
             'MarkerSize', 15);
 end
 
-if ~isempty(Seg.thresh_final{frame}) && sum(ismember(mode, 'FINAL')) == 1;
+if ~isempty(Seg.thresh_final{frame}) && sum(ismember(mode, 'FINAL')) == 1
     plot(Seg.thresh_final{frame}(:, 1), Seg.thresh_final{frame}(:, 2), 'y.', ...
         'MarkerSize', 15);
 end
 
-if ~isempty(Seg.thresh_diff_c{frame}) && sum(ismember(mode, 'DIFFC')) == 1;
+if ~isempty(Seg.thresh_diff_c{frame}) && sum(ismember(mode, 'DIFFC')) == 1
     plot(Seg.thresh_diff_c{frame}(:, 1), Seg.thresh_diff_c{frame}(:, 2), 'm.', ...
         'MarkerSize', 15);
 end
 
-if ~isempty(Seg.thresh_corr{frame}) && sum(ismember(mode, 'CORR')) == 1;
+if ~isempty(Seg.thresh_corr{frame}) && sum(ismember(mode, 'CORR')) == 1
     plot(Seg.thresh_corr{frame}(:, 1), Seg.thresh_corr{frame}(:, 2), 'k.', ...
         'MarkerSize', 15);
 end
