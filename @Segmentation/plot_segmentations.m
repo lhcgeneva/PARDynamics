@@ -15,7 +15,7 @@ if sum(ismember(mode, 'IMAGE')) == 1
 end
 hold on;
 if sum(ismember(mode, 'MIDPOINT')) == 1
-    plot(Seg.midpoint{frame}(1), Seg.midpoint{frame}(2), 'g.', ...
+    plot(Seg.midpoint{frame}(1), Seg.midpoint{frame}(2), 'm.', ...
             'MarkerSize', 15);
 end
 if ~isempty(Seg.thresh_limits) && sum(ismember(mode, 'LIMITS')) == 1   
@@ -33,7 +33,7 @@ if ~isempty(Seg.thresh_limits) && sum(ismember(mode, 'LIMITS')) == 1
     plot(x_coo, y_coo, 'r', 'LineWidth', 1);
 end
 if ~isempty(Seg.thresh_max{frame}) && sum(ismember(mode, 'MAX')) == 1
-    plot(Seg.thresh_max{frame}(:, 1), Seg.thresh_max{frame}(:, 2), 'k.', ...
+    plot(Seg.thresh_max{frame}(:, 1), Seg.thresh_max{frame}(:, 2), 'r.', ...
             'MarkerSize', 15);
 end
 if ~isempty(Seg.thresh_diff{frame}) && sum(ismember(mode, 'DIFF')) == 1
@@ -47,7 +47,7 @@ if ~isempty(Seg.thresh_final{frame}) && sum(ismember(mode, 'FINAL')) == 1
 end
 
 if ~isempty(Seg.thresh_diff_c{frame}) && sum(ismember(mode, 'DIFFC')) == 1
-    plot(Seg.thresh_diff_c{frame}(:, 1), Seg.thresh_diff_c{frame}(:, 2), 'm.', ...
+    plot(Seg.thresh_diff_c{frame}(:, 1), Seg.thresh_diff_c{frame}(:, 2), 'g.', ...
         'MarkerSize', 15);
 end
 

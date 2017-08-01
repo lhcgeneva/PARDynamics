@@ -22,7 +22,7 @@ function varargout = imageGUI(varargin)
 
 % Edit the above text to modify the response to help imageGUI
 
-% Last Modified by GUIDE v2.5 30-Jul-2017 14:20:18
+% Last Modified by GUIDE v2.5 01-Aug-2017 19:41:45
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -107,8 +107,14 @@ handles.imNumDisp.String = [num2str(imageNum),...
 image = handles.image(:, :, imageNum);
 % bring current axes in focus and show image
 axes(handles.imageAxes);
-% handles.S.plot_segmentations(imageNum, { 'MIDPOINT', 'IMAGE', 'DIFF', 'DIFFC', 'FINAL'});
-handles.S.plot_segmentations(imageNum, { 'MIDPOINT', 'IMAGE', 'CORR'});
+plot_string = {'MIDPOINT', 'IMAGE'};
+if handles.Corrected.Value; plot_string{end+1} = 'CORR'; end
+if handles.Difference.Value; plot_string{end+1} = 'DIFF'; end
+if handles.diff_c.Value; plot_string{end+1} = 'DIFFC'; end
+if handles.Final.Value; plot_string{end+1} = 'FINAL'; end
+if handles.Maximum.Value; plot_string{end+1} = 'MAX'; end
+handles.S.plot_segmentations(imageNum, plot_string);
+% handles.S.plot_segmentations(imageNum, { 'MIDPOINT', 'IMAGE', 'CORR'});
 %store image data and slice number in axes
 setappdata(handles.imageAxes, 'image',     image);
 setappdata(handles.imageAxes, 'sliceNum',  imageNum);
@@ -149,6 +155,42 @@ function Maximum_Callback(hObject, ~, handles)
 % Hint: get(hObject,'Value') returns toggle state of Maximum
 
 
+
+% --- Executes on button press in diff_c.
+function diff_c_Callback(hObject, eventdata, handles)
+% Hint: get(hObject,'Value') returns toggle state of diff_c
+
+
+% --- Executes on button press in Final.
+function Final_Callback(hObject, eventdata, handles)
+% Hint: get(hObject,'Value') returns toggle state of Final
+
+
 % --- Executes on button press in Corrected.
-function Corrected_Callback(hObject, ~, handles)
+function Corrected_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of Corrected
+
+
+% --- Executes during object creation, after setting all properties.
+function Maximum_CreateFcn(hObject, eventdata, handles)
+set(hObject,'BackgroundColor', [1 0.5 0.5]);
+
+
+% --- Executes during object creation, after setting all properties.
+function Final_CreateFcn(hObject, eventdata, handles)
+set(hObject,'BackgroundColor', [1 1 0]);
+
+
+% --- Executes during object creation, after setting all properties.
+function diff_c_CreateFcn(hObject, eventdata, handles)
+set(hObject,'BackgroundColor', [0 1 0]);
+
+
+% --- Executes during object creation, after setting all properties.
+function Difference_CreateFcn(hObject, eventdata, handles)
+set(hObject,'BackgroundColor', [0.5 0.5 1]);
+
+
+% --- Executes during object creation, after setting all properties.
+function Corrected_CreateFcn(hObject, eventdata, handles)
+set(hObject,'BackgroundColor', [0.5 0.5 0.5]);

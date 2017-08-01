@@ -25,6 +25,14 @@ for jj = 1 : Seg.sz_all(3)
 %                 Seg.thresh_final{jj}(isnan(Seg.thresh_final{jj})) = ...
 %                         Seg.thresh_sigma{jj}(isnan(Seg.thresh_final{jj}));
 %     Seg.thresh_final{jj} = [Seg.thresh_final{jj}; Seg.thresh_final{jj}(1, :)];
+filt1 = smooth(Seg.thresh_final{jj}(:, 1), 21, 'sgolay', 5);
+filt2 = smooth(Seg.thresh_final{jj}(:, 2), 21, 'sgolay', 5);
+dist1 = filt1 - Seg.thresh_final{jj}(:, 1);
+dist2 = filt2 - Seg.thresh_final{jj}(:, 2);
+mask1 = abs(dist1) >= 1.5;
+mask2 = abs(dist2) >= 1.5;
+Seg.thresh_final{jj}(mask1, 1) = filt1(mask1);
+Seg.thresh_final{jj}(mask2, 2) = filt2(mask2);
 end
 end
 
