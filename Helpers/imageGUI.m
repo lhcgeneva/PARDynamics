@@ -124,6 +124,10 @@ end
 % --- Executes on button press in freehand_prop.
 function freehand_prop_Callback(hObject, ~, handles)
 sliceNum = getappdata(handles.imageAxes, 'sliceNum');
+if strcmp(handles.S.project_mode, 'internal_no_project')
+    warning(['project_mode is set to internal_no_project, using ',...
+             'propagation might lead to unexpected behavior.']);
+end
 handles.S.correct_segmentation(sliceNum, 1);
 guidata(hObject, handles)
 

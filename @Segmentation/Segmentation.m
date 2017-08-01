@@ -30,9 +30,10 @@ properties
     mode = 'MaxDiff';
     posteriorPos;
     prec_diff = 10;
-    prec_max = 10;
+    prec_max = 5;
     prec_sigma = 20;
     priority_order = [1, 2]; %Order in which segmentations are used for final
+    project_mode = 'PROJECT' %either 'external', 'internal_no_project', 'PROJECT'
     ROTATE = 1;     %Whether posterior should be rotated to start of outline
     saveImagingData = 'on'; %Save or drop imaging data (stack)
     sz_all;         %Size 
@@ -54,7 +55,7 @@ methods
             Seg.curr_dir        = pwd;
             Seg.seg_prec        = seg_prec;
             Seg.lineThick = lineThick;
-            Seg.load_data(file, 'PROJECT'); %alt: 'external', 'internal_no_project'
+            Seg.load_data(file, Seg.project_mode);
             
             % Preallocate outline lists, run segmentation
             Seg.segment_cell();
@@ -80,12 +81,11 @@ methods
     create_final_outline(Seg); 
     delete_Data(Seg);
     export_thresh_corr(Seg);
-    load_data(Seg, file, mode);
+    load_data(Seg, file, project_mode);
     plot_segmentations(Seg, frame, mode);
     rerun_segmentation(Seg, INPUT);
     segment_cell(Seg, prec, g, mode);
     set_geometry(Seg, mode)
-    set_points(Seg);
     S = straighten(Seg, input);
     write_images(Seg, subfolder, image_cell, tiff_style, filename);
 end
