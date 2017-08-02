@@ -12,7 +12,7 @@ for i = 1 : Seg.sz_all(3)
     d = d(~isnan(d));
     mean_d = mean(d(1:round(0.8*length(d))));
     Seg.thresh_max{i}(d_unsorted > 2 * mean_d, :) = nan;
-    Seg.dist_mid_max{i}(d_unsorted > 2 * mean_d, :) = nan;
+    Seg.dist_mid_max{i}(d_unsorted > 2 * mean_d) = nan;
 end
             
             

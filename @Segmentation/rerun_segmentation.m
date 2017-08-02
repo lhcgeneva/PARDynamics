@@ -6,10 +6,7 @@ if nargin == 2 && userInput
     Seg.thresh_max{Seg.sz_all(3)}       = [];
     Seg.thresh_diff{Seg.sz_all(3)}      = [];
     Seg.thresh_sigma{Seg.sz_all(3)}     = [];
-    [Seg.thresh_max, Seg.dist_mid_max]  = Seg.segment_cell(  Seg.prec_max, ...
-                                                Seg.thresh_limits, 'MAX');
-    [Seg.thresh_diff, Seg.dist_mid_diff]= Seg.segment_cell(  Seg.prec_diff, ...
-                                                Seg.thresh_limits, 'DIFF');
+    Seg.segment_cell();
     Seg.correct_difference();
     Seg.create_final_outline();
     Seg.thresh_corr = Seg.thresh_final;
@@ -20,4 +17,3 @@ Seg.Imr_s{1} = Seg.straighten(Seg.channels{1});
 Seg.Imr_s{2} = Seg.straighten(Seg.channels{2});
 
 end
-
