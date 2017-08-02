@@ -22,7 +22,7 @@ function varargout = imageGUI(varargin)
 
 % Edit the above text to modify the response to help imageGUI
 
-% Last Modified by GUIDE v2.5 01-Aug-2017 19:41:45
+% Last Modified by GUIDE v2.5 02-Aug-2017 15:51:53
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -203,3 +203,24 @@ set(hObject,'BackgroundColor', [0.5 0.5 1]);
 % --- Executes during object creation, after setting all properties.
 function Corrected_CreateFcn(hObject, eventdata, handles)
 set(hObject,'BackgroundColor', [0.5 0.5 0.5]);
+
+
+% --- Executes on button press in resetAll.
+function resetAll_Callback(hObject, eventdata, handles)
+handles.S.thresh_corr = handles.S.thresh_final;
+imageNum = floor(get(handles.imageSlider,'Value'));
+plot_seg(handles, imageNum);
+
+
+% --- Executes on button press in resetFollowing.
+function resetFollowing_Callback(hObject, eventdata, handles)
+imageNum = floor(get(handles.imageSlider,'Value'));
+handles.S.thresh_corr(imageNum:end) = handles.S.thresh_final(imageNum:end);
+plot_seg(handles, imageNum);
+
+
+% --- Executes on button press in resetCurrent.
+function resetCurrent_Callback(hObject, eventdata, handles)
+imageNum = floor(get(handles.imageSlider,'Value'));
+handles.S.thresh_corr(imageNum) = handles.S.thresh_final(imageNum);
+plot_seg(handles, imageNum);

@@ -76,7 +76,7 @@ for jj = 1 : Seg.sz_all(3)
                     m = NaN;
                 end
                 if m < innerCircle || m > outerCircle
-                m = NaN;
+                    m = NaN;
                 end
                 outline_point = [m+midpoint_r(1),midpoint_r(2), 1]';
                 outline_point_orig = M_cc \ outline_point;
