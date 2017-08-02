@@ -10,8 +10,20 @@ if seedingMode == 0
     h = fspecial('gaussian', [10 10], 30);
     blurred = imfilter(MergeBuff,h,'replicate');
     imshow(blurred, lut);
-    title('Click on midpoint and on short and long axis membrane intersections, as well as on the posterior pole.');
+    ht = title({'Click on midpoint, short and long ',...
+                'axis and on the posterior pole.'}, 'FontSize', 12);
     axis equal;
+    fig = gcf;
+    titleExtent = get(ht,'Extent');
+    set(fig,'units','normalized');
+    Position = get(fig,'Position');
+    set(fig,'Position',[0.1 0.1 Position(3) Position(4)]);
+    while titleExtent(2)<0
+        Position = get(fig,'Position');
+        % Resize the figure. Increase the figure by 5%
+        set(fig,'Position',[Position(1) Position(2) 1.05*Position(3) 1.05*Position(4)])
+        titleExtent = get(ht,'Extent');
+    end
     % Using a version of ginput from about 2005/6, cause most recent one
     % seems to be buggy (crosshair vanishes after as soon as ginput() is
     % called). Also, myginput allows cooler pointer ('crosshair').
@@ -28,7 +40,7 @@ if seedingMode == 0
         minorRadius = t; 
     end
 % The following cannot define the posterior pole!
-elseif seedingMode == 1;
+elseif seedingMode == 1
     [~, threshold] = edge(MergeBuff, 'roberts');
     fudgeFactor = 0.65;
     BWs = edge(MergeBuff,'sobel', threshold * fudgeFactor);
@@ -60,7 +72,8 @@ elseif seedingMode == 1;
     midpoint = [e.X0_in; e.Y0_in; 1];
     minorRadius = e.short_axis/2;
     majorRadius = e.long_axis/2;
-else disp('Not a known seeding mode')
+else
+    disp('Not a known seeding mode');
 end
 
 end

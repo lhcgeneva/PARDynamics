@@ -90,14 +90,29 @@ for jj = 1 : Seg.sz_all(3)
                 y_bot = Seg.prec_diff + y_top;
                 ROI_av = MergeBuff_r(y_top:y_bot, x_top:x_bot);
                 ROI_av(ROI_av==0) = nan;
-                d_t = nanmean(ROI_av);
-                d = d_t(~isnan(d_t));
-                d       = smooth(smooth(diff(d),20));
+                ROI_smooth = nanmean(ROI_av); 
+                ROI_smooth = ROI_smooth(~isnan(ROI_smooth));
+                d       = smooth(smooth(diff(ROI_smooth),20));
                 [~, m]  = min(d(ceil(ROI_width_temp/4):end-10));
                 m       = ceil(ROI_width_temp/4) - 1 + m;
                 if m < innerCircle || m > outerCircle
                     m = NaN;
                 end
+                
+                % The below if/end is experimental: linear fit between
+                % center point and edge and another linear fit at the
+                % steepest slope of the edge and taking their intersection.
+                %
+                % m1*x + n1 = m2*x + n2 -> x = (n2-n1)/(m1-m2)
+                % m1 = slope, n1 = smoothed(ROI_av)(m)-slope*m, m2/n2 from polyfit
+%                 if ~isnan(m)
+%                     xm = round(m);
+%                     f = smooth(ROI_smooth, 21, 'sgolay', 5);
+%                     pf1 = polyfit(1:xm-30, f(1:xm-30)', 1);
+%                     pf2 = polyfit(xm-10:xm+10, f(xm-10:xm+10)', 1);
+%                     m = (pf1(2)-pf2(2))/(pf2(1)-pf1(1));
+%                 end
+                
                 outline_point       = [m+midpoint_r(1),midpoint_r(2), 1]';
                 outline_point_orig  = M_cc \ outline_point;
                 Seg.dist_mid_diff{jj}(i) = m;

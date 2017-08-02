@@ -57,7 +57,7 @@ handles.image = reshape([handles.MergeBuff{:}], handles.sz(1),...
 handles.numImages = length(handles.MergeBuff);
 updateSlider(handles);
 guidata(hObject, handles);
-handles.S.plot_segmentations(1, { 'MIDPOINT', 'IMAGE', 'CORR'});
+plot_seg(handles, 1);
 
 
 % --- Outputs from this function are returned to the command line.
@@ -107,6 +107,14 @@ handles.imNumDisp.String = [num2str(imageNum),...
 image = handles.image(:, :, imageNum);
 % bring current axes in focus and show image
 axes(handles.imageAxes);
+plot_seg(handles, imageNum);
+%store image data and slice number in axes
+setappdata(handles.imageAxes, 'image',     image);
+setappdata(handles.imageAxes, 'sliceNum',  imageNum);
+
+function plot_seg(handles, imageNum)
+% Plots midpoint, slice imageNum and different segmentation methods,
+% depending on tick boxes set in GUI.
 plot_string = {'MIDPOINT', 'IMAGE'};
 if handles.Corrected.Value; plot_string{end+1} = 'CORR'; end
 if handles.Difference.Value; plot_string{end+1} = 'DIFF'; end
@@ -114,10 +122,7 @@ if handles.diff_c.Value; plot_string{end+1} = 'DIFFC'; end
 if handles.Final.Value; plot_string{end+1} = 'FINAL'; end
 if handles.Maximum.Value; plot_string{end+1} = 'MAX'; end
 handles.S.plot_segmentations(imageNum, plot_string);
-% handles.S.plot_segmentations(imageNum, { 'MIDPOINT', 'IMAGE', 'CORR'});
-%store image data and slice number in axes
-setappdata(handles.imageAxes, 'image',     image);
-setappdata(handles.imageAxes, 'sliceNum',  imageNum);
+
 
 
 % --- Executes during object creation, after setting all properties.
@@ -148,28 +153,32 @@ guidata(hObject, handles)
 % --- Executes on button press in Difference.
 function Difference_Callback(hObject, ~, handles)
 % Hint: get(hObject,'Value') returns toggle state of Difference
-
+imageNum = floor(get(handles.imageSlider,'Value'));
+plot_seg(handles, imageNum);
 
 % --- Executes on button press in Maximum.
 function Maximum_Callback(hObject, ~, handles)
 % Hint: get(hObject,'Value') returns toggle state of Maximum
-
-
+imageNum = floor(get(handles.imageSlider,'Value'));
+plot_seg(handles, imageNum);
 
 % --- Executes on button press in diff_c.
 function diff_c_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of diff_c
-
+imageNum = floor(get(handles.imageSlider,'Value'));
+plot_seg(handles, imageNum);
 
 % --- Executes on button press in Final.
 function Final_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of Final
-
+imageNum = floor(get(handles.imageSlider,'Value'));
+plot_seg(handles, imageNum);
 
 % --- Executes on button press in Corrected.
 function Corrected_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of Corrected
-
+imageNum = floor(get(handles.imageSlider,'Value'));
+plot_seg(handles, imageNum);
 
 % --- Executes during object creation, after setting all properties.
 function Maximum_CreateFcn(hObject, eventdata, handles)
