@@ -5,16 +5,6 @@ function create_final_outline( Seg )
 %   the first (most important) one and continuing with the second for every
 %   value that was nan and so on.
 
-for i = 1 : Seg.sz_all(3)
-    d_unsorted = hypot(Seg.thresh_diff{i}(:, 1) - Seg.thresh_max{i}(:,1), ...
-        Seg.thresh_diff{i}(:, 2) - Seg.thresh_max{i}(:,2));
-    d = sort(d_unsorted);
-    d = d(~isnan(d));
-    mean_d = mean(d(1:round(0.8*length(d))));
-    Seg.thresh_max{i}(d_unsorted > 2 * mean_d, :) = nan;
-    Seg.dist_mid_max{i}(d_unsorted > 2 * mean_d) = nan;
-end
-            
             
 t = {Seg.thresh_max, Seg.thresh_diff_c};%, S.thresh_sigma}; 
 t = t(Seg.priority_order);%Priority for different segmentations in final

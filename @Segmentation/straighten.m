@@ -15,15 +15,15 @@ start_frame = 1;
 stop_frame = length(input);
 
 % Save tifs and ROIs in directories that can be picked up by Miji
-cd('/Users/hubatsl/');
+cd('~/');
 % Change current directory to home folder so write_images() writes to
 % correct folder which can be used by FIJI/Miji
 temp = Seg.curr_dir;
-Seg.curr_dir = '/Users/hubatsl/';
+Seg.curr_dir = '~/';
 mkdir('temp_out');
 mkdir('temp');
 Seg.write_images('temp', input, 'SINGLE', 'in');
-cd('/Users/hubatsl/temp');
+cd('~/temp');
 
 % Rotate, so posterior is where straightened line starts
 if Seg.ROTATE == 1
@@ -57,15 +57,15 @@ dlmwrite('lineThick.txt', Seg.lineThick);
 % Also make sure to have mij.jar in Applications/Fiji.app/jars/
 evalc('Miji(false);'); %Miji is wrapped in evalc to suppress unnecessary output
 MIJ.run('straighten ROI');
-cd('/Users/hubatsl/temp_out');
+cd('~/temp_out');
 for i = start_frame : stop_frame
     S{i} = imread([num2str(i),'.tif'], 'tif');
 end
-rmdir('/Users/hubatsl/temp', 's');
-rmdir('/Users/hubatsl/temp_out', 's');
+rmdir('~/temp', 's');
+rmdir('~/temp_out', 's');
 try
     cd(curr);
 catch
-    cd('/Users/hubatsl/Desktop');
+    cd('~/Desktop');
 end
 end
