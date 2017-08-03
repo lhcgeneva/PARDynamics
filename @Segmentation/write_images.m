@@ -34,5 +34,17 @@ elseif strcmp(tiff_style, 'STACK')
             disp('image empty');
         end
     end
+elseif strcmp(tiff_style, 'CSV')
+    mkdir(subfolder);
+    try
+        for jj = 1 : length(image_cell)
+            csvwrite([Seg.curr_dir,'/',subfolder,'/',filename, '_', num2str(jj), '.csv'],...
+                uint16(image_cell{jj}));
+        end
+    catch
+        disp(['Writing interrupted at image no. ', num2str(jj)]);
+    end
+end
+    
 end
 
