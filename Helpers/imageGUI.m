@@ -22,7 +22,7 @@ function varargout = imageGUI(varargin)
 
 % Edit the above text to modify the response to help imageGUI
 
-% Last Modified by GUIDE v2.5 02-Aug-2017 15:51:53
+% Last Modified by GUIDE v2.5 03-Aug-2017 13:02:01
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -223,4 +223,56 @@ plot_seg(handles, imageNum);
 function resetCurrent_Callback(hObject, eventdata, handles)
 imageNum = floor(get(handles.imageSlider,'Value'));
 handles.S.thresh_corr(imageNum) = handles.S.thresh_final(imageNum);
+plot_seg(handles, imageNum);
+
+
+
+function min_Callback(hObject, eventdata, handles)
+% Hints: get(hObject,'String') returns contents of min as text
+%        str2double(get(hObject,'String')) returns contents of min as a double
+% imageNum = floor(get(handles.imageSlider,'Value'));
+% handles.S.lut(1) = num2str(get(hObject,'String'));
+% plot_seg(handles, imageNum);
+
+% --- Executes during object creation, after setting all properties.
+function min_CreateFcn(hObject, eventdata, handles)
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function max_Callback(hObject, eventdata, handles)
+% Hints: get(hObject,'String') returns contents of max as text
+%        str2double(get(hObject,'String')) returns contents of max as a double
+% imageNum = floor(get(handles.imageSlider,'Value'));
+% handles.S.lut(2) = num2str(get(hObject,'String'));
+% plot_seg(handles, imageNum);
+
+% --- Executes during object creation, after setting all properties.
+function max_CreateFcn(hObject, eventdata, handles)
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in adjust.
+function adjust_Callback(hObject, eventdata, handles)
+try
+    imageNum = floor(get(handles.imageSlider,'Value'));
+    handles.S.lut = [str2double(handles.min.String), str2double(handles.max.String)];
+    plot_seg(handles, imageNum);
+catch
+    warning('Check whether min and max are numerical.');
+end
+
+
+% --- Executes on button press in ResetLUT.
+function ResetLUT_Callback(hObject, eventdata, handles)
+imageNum = floor(get(handles.imageSlider,'Value'));
+handles.S.lut = [];
 plot_seg(handles, imageNum);
