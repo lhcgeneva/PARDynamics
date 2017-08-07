@@ -15,8 +15,8 @@ if sum(ismember(mode, 'IMAGE')) == 1
 end
 hold on;
 if sum(ismember(mode, 'MIDPOINT')) == 1
-    plot(Seg.midpoint{frame}(1), Seg.midpoint{frame}(2), 'm.', ...
-            'MarkerSize', 15);
+    plot(Seg.midpoint{frame}(1), Seg.midpoint{frame}(2), 'k.', ...
+            'MarkerSize', 30);
 end
 if ~isempty(Seg.thresh_limits) && sum(ismember(mode, 'LIMITS')) == 1   
     ang = 0 : 0.01 : 2*pi;
@@ -34,26 +34,26 @@ if ~isempty(Seg.thresh_limits) && sum(ismember(mode, 'LIMITS')) == 1
 end
 if ~isempty(Seg.thresh_max{frame}) && sum(ismember(mode, 'MAX')) == 1
     plot(Seg.thresh_max{frame}(:, 1), Seg.thresh_max{frame}(:, 2), 'r.', ...
-            'MarkerSize', 15);
+            'MarkerSize', 30);
 end
 if ~isempty(Seg.thresh_diff{frame}) && sum(ismember(mode, 'DIFF')) == 1
     plot(Seg.thresh_diff{frame}(:, 1), Seg.thresh_diff{frame}(:, 2), 'b.', ...
-            'MarkerSize', 15);
+            'MarkerSize', 30);
 end
 
 if ~isempty(Seg.thresh_final{frame}) && sum(ismember(mode, 'FINAL')) == 1
     plot(Seg.thresh_final{frame}(:, 1), Seg.thresh_final{frame}(:, 2), 'y.', ...
-        'MarkerSize', 15);
+        'MarkerSize', 30);
 end
 
 if ~isempty(Seg.thresh_diff_c{frame}) && sum(ismember(mode, 'DIFFC')) == 1
     plot(Seg.thresh_diff_c{frame}(:, 1), Seg.thresh_diff_c{frame}(:, 2), 'g.', ...
-        'MarkerSize', 15);
+        'MarkerSize', 30);
 end
 
 if ~isempty(Seg.thresh_corr{frame}) && sum(ismember(mode, 'CORR')) == 1
-    plot(Seg.thresh_corr{frame}(:, 1), Seg.thresh_corr{frame}(:, 2), 'k.', ...
-        'MarkerSize', 15);
+    plot(Seg.thresh_corr{frame}(:, 1), Seg.thresh_corr{frame}(:, 2), 'm.', ...
+        'MarkerSize', 30);
 end
 hold off;
 end
