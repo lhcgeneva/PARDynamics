@@ -17,6 +17,8 @@ function load_data(Seg, file, mode)
                 Seg.channels{1}{k}  = file{1}(:, :, k);
                 if isequal(length(file), 2)
                     Seg.channels{2}{k}  = file{2}(:, :, k);
+                else
+                    Seg.channels{2} = {};
                 end
             end
             %Prepare input for segmentation
@@ -35,8 +37,6 @@ function load_data(Seg, file, mode)
         disp('Class Segmentation: wrong input format.');
         return;
     end
-    %% Provide empty second channel, in case only one channel was given
-    Seg.channels{2} = {};
     %% Set geometry (cursor input for mid point, radii)
     Seg.sz_all = size(Seg.Merge);
     if strcmp(mode, 'internal_no_project')

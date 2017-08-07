@@ -6,15 +6,16 @@ classdef Z3D < handle
     %   uint array.
         
 properties
-    stackCell;          %Image stack, first element green, second red
-    SegmentationCell;   %Array containing time course of Segmentations
-    TriangulationCell;  %Cell array containing triangulation structures
-    numTPoints;         %Number of timepoints
-    numZSlices;         %Number of Z-slices
-    resolution;         %Structure, contains .x, .y, .z values for microscope
     depthCorr;          %Contains vector of length numZSlices to correct for focal depth
     filename;           %filename if data contains disk location
+    numTPoints;         %Number of timepoints
+    numZSlices;         %Number of Z-slices
+    parallel = 0;       %1 - use parfor, 0 - don't use parfor
+    resolution;         %Structure, contains .x, .y, .z values for microscope
     saveImagingData;    %Save imaging data
+    SegmentationCell;   %Array containing time course of Segmentations
+    stackCell;          %Image stack, first element green, second red
+    TriangulationCell;  %Cell array containing triangulation structures
 end
 
 methods
@@ -49,14 +50,9 @@ methods
             %because triangulation takes time, which is annoying if one
             %segments a long movie. This way, all segs are done at
             %once.
-%             if isempty(gcp('nocreate')); parpool(4, 'IdleTimeout', 600); end 
-%             parfor tPoint = 1 : this.numTPoints
-%                 TriangulationCell_copy{tPoint} =this.zTriangulation(tPoint);
-%             end   
-%             this.TriangulationCell = TriangulationCell_copy;
-%             clear TriangulationCell_copy;
-%             %Delete imaging data to save space
-%             if strcmp(this.saveImagingData, 'off'); this.delete_Imaging_Data(); end
+            this.triangulate_Z3D();
+            %Delete imaging data to save space
+            if strcmp(this.saveImagingData, 'off'); this.delete_Imaging_Data(); end
         end
     end
 
@@ -66,6 +62,7 @@ methods
     ortho(this, color, frame);
     load_Z3D_Data(this, data, mode);
     delete_Imaging_Data(this);
+    triangulate_Z3D(this);
 end
     
 end

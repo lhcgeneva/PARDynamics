@@ -53,7 +53,7 @@ end
 end
 
 function plot_channel(Pi, cmap, channel_string, t, p, tPoint)
-    figure(2)
+    figure;
     hold on;
     cdata = 1:length(Pi);
     title(['Channel ', num2str(channel_string), ' timepoint ',...
