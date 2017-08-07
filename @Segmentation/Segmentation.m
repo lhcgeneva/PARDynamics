@@ -1,5 +1,5 @@
 classdef Segmentation < handle
-%SEGMENTATION(fname, seg_prec, prec_max, prec_diff, prec_sigma, lineThick) 
+%SEGMENTATION(fname, seg_prec, lineThick, lut) 
 %   returns cell outlines and straightened profiles using MIJ
 %   Loads data (3-D stack), creates segmentation using different modes,
 %   either all together or the ones specified (maximum intensity,
@@ -52,8 +52,8 @@ methods
         if nargin > 0
             % Assign constructor inputs to properties
             if nargin == 7; Seg.lut = lut; end
-            Seg.curr_dir        = pwd;
-            Seg.seg_prec        = seg_prec;
+            Seg.curr_dir = pwd;
+            Seg.seg_prec = seg_prec;
             Seg.lineThick = lineThick;
             Seg.load_data(file, Seg.project_mode);
             

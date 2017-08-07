@@ -2,7 +2,11 @@
 ## Image Analysis
 Package to quantify membrane protein levels along cell perimeter.
 ### Segmentation
-Segmentation: class assembling tools to segment cells.
+Class that assembles tools to segment cells. Segmentation is automatic, but the user can correct deviations by hand:
+
+![Alt text](https://user-images.githubusercontent.com/5346297/29020708-dc2b328e-7b5a-11e7-8830-09e875912606.gif "Optional title")
+
+
 Algorithm works roughly as follows:
 
 1.  Get midpoint (at the moment by user input, could easily be automated by thresholding out the rough outline of the cell and finding its center of mass).

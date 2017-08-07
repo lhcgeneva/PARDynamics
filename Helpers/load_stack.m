@@ -21,9 +21,9 @@ width = max([info.Width]);
 height = max([info.Height]);
 try
     stack = zeros(height, width, numZSlices, numTPoints);
-    for i = 1:numZSlices
-        for j = 1:numTPoints
-            stack(:, :, i, j) = imread(filename, (i-1)*numTPoints+j, 'Info', info);
+    for j = 1:numTPoints
+        for i = 1:numZSlices
+            stack(:, :, i, j) = imread(filename, (j-1)*numZSlices+i, 'Info', info);
         end
     end
 catch
