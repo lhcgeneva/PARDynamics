@@ -8,6 +8,7 @@ classdef Z3D < handle
 properties
     depthCorr;          %Contains vector of length numZSlices to correct for focal depth
     filename;           %filename if data contains disk location
+    lineThick = 16;          %line thickness used for segmentations
     numTPoints;         %Number of timepoints
     numZSlices;         %Number of Z-slices
     parallel = 0;       %1 - use parfor, 0 - don't use parfor
@@ -44,7 +45,8 @@ methods
                     stack = {this.stackCell{1}(:, :, :, tPoint), ...
                                 this.stackCell{2}(:, :, :, tPoint)};
                 end
-                this.SegmentationCell{tPoint} = Segmentation(stack, 40, 10);
+                this.SegmentationCell{tPoint} = Segmentation(stack, 40,...
+                                                this.lineThick);
             end
             %Create all triangulations. Not in previous for loop,
             %because triangulation takes time, which is annoying if one

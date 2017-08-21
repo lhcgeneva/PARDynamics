@@ -24,7 +24,7 @@ if length(info) == 1; Projection = Projection'; end
 Projection = mat2cell(Projection, width, ones(1, length(info)));
 %%%%%%%IMPLEMENT CHECK FOR ZEROS OTHER THAN TRAILING ONES!
 Projection = cellfun(@(x) x(x~=0), Projection, 'UniformOutput', false);
-MemCirc = cellfun(@length, Projection)
+MemCirc = cellfun(@length, Projection);
 
 ProjectionSmooth = cellfun(@(x) ...
                     Segmentation.smooth_periodic(x, smooth_window), ...
@@ -55,7 +55,7 @@ bot = min(30, maxRegSmoothInd - 1)-botOffset;
 top = min(30, width - maxRegSmoothInd)-topOffset;
 %Start parallel pool if not started, idle time 10 hours.
 if isempty(gcp('nocreate')); parpool('IdleTimeout', 600); end 
-parfor k = 1: length(info)
+for k = 1: length(info)
     r = fliplr(ProjRegSmooth{k}(maxRegSmoothInd(k) - bot: end)');
     try 
         Fr = Fit(r, showGraphs, 1, 'err');
@@ -131,7 +131,7 @@ axis([0 length(info) 0 max(DomainSize)]);
 if strcmp(savePic, 'on')
     saveas(gcf, ['DomainSize', filename(1:end-4), '.jpg'], 'jpg');
 end
-close all;
+% close all;
 
 if strcmp(savePic, 'on')
     dlmwrite(['DomainSize', filename(1:end-4), '.txt'], DomainSize');

@@ -10,6 +10,8 @@ function plot_segmentations( Seg, frame, mode )
 %   'CORRECTED' Plots manually corrected 
 
 figure(gcf);
+cla;
+
 if sum(ismember(mode, 'IMAGE')) == 1
     imshow(Seg.MergeBuff{frame}, Seg.lut); 
 end

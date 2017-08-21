@@ -4,7 +4,7 @@ function correct_segmentation( Seg, sliceNum, IsPropagated)
 imshow(Seg.MergeBuff{sliceNum},  Seg.lut); hold on;
 sc = scatter(Seg.thresh_corr{sliceNum}(:, 1), Seg.thresh_corr{sliceNum}(:, 2),...
              'red', 'filled');
-plot(Seg.midpoint{sliceNum}(1), Seg.midpoint{sliceNum}(2), 'g.', 'MarkerSize', 20);
+plot(Seg.midpoint{sliceNum}(1), Seg.midpoint{sliceNum}(2), 'k.', 'MarkerSize', 20);
 freeHandSelectionHandle = imfreehand('Closed', false);
 bds = freeHandSelectionHandle.getPosition;
 temp_thresh = Seg.thresh_corr{sliceNum};
@@ -26,6 +26,15 @@ for i = 1:length(Seg.thresh_corr{sliceNum})
         elseif x_corr<x_mid
             x_extrapolate = -1000000;
             y_extrapolate = m*x_extrapolate + n;
+        elseif x_corr == x_mid
+            x_extrapolate = x_mid;
+            if y_corr<y_mid
+                y_extrapolate = -1000000;
+            elseif y_corr>y_mid
+                y_extrapolate = 1000000;
+            else
+                disp('Segmentation goes through midpoint, repeat.');
+            end
         end
         [xtemp, ytemp] = polyxpoly([x_mid, x_extrapolate], ...
                     [y_mid, y_extrapolate],...
