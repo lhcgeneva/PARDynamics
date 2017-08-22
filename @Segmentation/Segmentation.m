@@ -36,6 +36,7 @@ properties
     project_mode = 'PROJECT' %either 'external', 'internal_no_project', 'PROJECT'
     ROTATE = 1;     %Whether posterior should be rotated to start of outline
     saveImagingData = 'on'; %Save or drop imaging data (stack)
+    straight = 0; %Whether straightening should be performed in constructor
     sz_all;         %Size 
     thresh_corr;    %User corrected final outline
     thresh_diff;    %Threshold as computed by maximum difference method
@@ -66,11 +67,15 @@ methods
             Seg.thresh_corr = Seg.thresh_final;
             h = imageGUI(Seg);
             waitfor(h);
-            Seg.Imr_s{1} = Seg.straighten(Seg.channels{1});
-            if ~isempty(Seg.channels{2})
-                Seg.Imr_s{2} = Seg.straighten(Seg.channels{2});
-            end
             
+            % Check, whether straightening should be performed within
+            % constructor
+            if Seg.straight
+                Seg.Imr_s{1} = Seg.straighten(Seg.channels{1});
+                if ~isempty(Seg.channels{2})
+                    Seg.Imr_s{2} = Seg.straighten(Seg.channels{2});
+                end
+            end
             % Delete imaging data if not kept
             if strcmp(Seg.saveImagingData, 'off'); Seg.delete_Data(); end 
         end
