@@ -6,8 +6,6 @@ Seg = this.SegmentationCell{tPoint};
 p = [];
 S{1} = [];
 S{2} = [];
-Z{1} = [];
-Z{2} = [];
 
 for i = 1 : length(Seg.thresh_corr)
     try 
@@ -21,7 +19,6 @@ for i = 1 : length(Seg.thresh_corr)
         P = impixel(im,temp1,temp2);
         P = P(:, 1);
         S{1} = [S{1}; P];
-        Z{1} = [Z{1}; (P-min(P))/(max(P)-min(P))];
         temp = [this.resolution.x * temp1', this.resolution.y * temp2', ...
                     this.resolution.z * ones(max(size(temp1)),1) * i];
         p = [p; temp]; 
@@ -31,7 +28,6 @@ for i = 1 : length(Seg.thresh_corr)
             P = impixel(im,temp1,temp2);
             P = P(:, 1);
             S{2} = [S{2}; P];
-            Z{2} = [Z{2}; (P-min(P))/(max(P)-min(P))];
         end
     catch
         disp(['No segmentation in plane nr. ', num2str(i)]);
@@ -40,12 +36,18 @@ end
 
 [t, tnorm] = MyRobustCrust(p);
 
+%Calculate triangle area for each triangle in the triangulation
+tri_area = zeros(1, length(t));
+for i = 1:length(t)
+    tri_area(i) = triangle_area(p(t(i, :)', :));
+end
+
 %Create output structure
 Triangulation.p = p;
 Triangulation.S = S;
-Triangulation.Z = Z;
 Triangulation.t = t;
 Triangulation.tnorm = tnorm;
+Triangulation.tri_area = tri_area;
 
 end
 
