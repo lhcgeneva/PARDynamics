@@ -57,14 +57,15 @@ methods
             if strcmp(this.saveImagingData, 'off'); this.delete_Imaging_Data(); end
         end
     end
-
-    Triangulation = zTriangulation(this, tPoint);
-    plot_triangulation(this, tPoint);
-    show_movie(this, pauseTime, export);
-    ortho(this, color, frame);
-    load_Z3D_Data(this, mode);
+    
+    find_polarity(this, tPoint, channel, PLOTTING)
     delete_Imaging_Data(this);
+    load_Z3D_Data(this, mode);
+    plot_triangulation(this, tPoint, PLOTHIST);
+    ortho(this, color, frame);
+    show_movie(this, pauseTime, export);
     triangulate_Z3D(this);
+    Triangulation = zTriangulation(this, tPoint);
 end
     
 end

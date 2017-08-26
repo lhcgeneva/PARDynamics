@@ -7,6 +7,7 @@ p = [];
 S{1} = [];
 S{2} = [];
 
+% Get intensity values at each point segmented in Z-stack.
 for i = 1 : length(Seg.thresh_corr)
     try 
         temp = Seg.thresh_corr{i};
@@ -36,18 +37,44 @@ end
 
 [t, tnorm] = MyRobustCrust(p);
 
-%Calculate triangle area for each triangle in the triangulation
+% Calculate triangle area for each triangle in the triangulation
 tri_area = zeros(1, length(t));
 for i = 1:length(t)
     tri_area(i) = triangle_area(p(t(i, :)', :));
 end
 
-%Create output structure
-Triangulation.p = p;
-Triangulation.S = S;
-Triangulation.t = t;
-Triangulation.tnorm = tnorm;
-Triangulation.tri_area = tri_area;
+% Caculate mean intensity for each triangle from vertex intensities based
+% on S.
+tri_m = cell(1, 2);
+for i = 1:length(t)
+    tri_m{1}(i) = mean(S{1}(t(i, :)))';
+    if ~isempty(S{2})
+        tri_m{2}(i) = mean(S{2}(t(i, :)))';
+    end
+end
+
+% Calculate centroid: get centroids of every triangle in the triangulation,
+% get average of all centroids, where each is weighted by its triangle's
+% area.
+tri_centr = zeros(size(t));
+for i = 1:length(t)
+    tri_centr(i, :) = mean(p(t(i, :)', :));
+end
+c = sum(tri_centr.*repmat(tri_area', 1, 3))/sum(tri_area);
+tri_c = tri_centr - c;
+p_c = p - c;
+
+% Create output structure
+Triangulation.c = c; %Centroid of Volume
+Triangulation.p = p; %Point cloud, units: microns
+Triangulation.p_c = p_c; %Points translated so center of mass is at 0
+Triangulation.S = S; %Intensities at each point in p
+Triangulation.t = t; %Triangulation using MyRobustCrust
+Triangulation.tnorm = tnorm; %normal vectors from MyRobustCrust
+Triangulation.tri_area = tri_area; %Area of each of the triangles in t
+Triangulation.tri_c = tri_c; %Center of mass of each indiv. triangle in t, center:0
+Triangulation.tri_m = tri_m; %Mean intensity of each triangle (mean of three points)
+                             %For each channel
 
 end
 
