@@ -75,6 +75,7 @@ Triangulation.tri_area = tri_area; %Area of each of the triangles in t
 Triangulation.tri_c = tri_c; %Center of mass of each indiv. triangle in t, center:0
 Triangulation.tri_m = tri_m; %Mean intensity of each triangle (mean of three points)
                              %For each channel
+Triangulation.V = stlVolume(p', t');
 
 end
 

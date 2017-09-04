@@ -67,16 +67,58 @@ parfor k = 1 : le
 end
 toc
 % Find indices of angles for which polarity is maximal (minimum overlap)
-% [~, ind] = min(sums(:));
-% [xm,ym,zm] = ind2sub(size(sums), ind);
-[~, ind] = max(sums(:));
-[xm,ym,zm] = ind2sub(size(sums), ind);
+% [~, ind] = min(sums(:)); % This is for overlap via interpolation
+[~, ind] = max(sums(:)); % This is for difference via mean
+[xm,ym,zm] = ind2sub(size(sums), ind); 
 
-% Rotate p and tri_c by the angles found above (xm, ym, zm)
+% Rotate p and tri_c by the angles (xm, ym, zm), save in TriangulationCell
 this.TriangulationCell{tPoint}.p_rot = (rotz(ang(zm))*roty(ang(ym))*rotx(ang(xm))*...
                                 this.TriangulationCell{tPoint}.p_c')';
 this.TriangulationCell{tPoint}.tri_c_rot = (rotz(ang(zm))*roty(ang(ym))*rotx(ang(xm))*...
                                 this.TriangulationCell{tPoint}.tri_c')';
+
+% Save angles                          
+this.Ang.x = ang(xm);
+this.Ang.y = ang(ym);
+this.Ang.z = ang(zm);
+this.Ang.xind = xm;
+this.Ang.yind = ym;
+this.Ang.zing = zm;
+    
+% Get normalized histograms:
+
+logic = this.TriangulationCell{tPoint}.tri_c_rot(:, 1) > 0;
+% Get histogram of positive x points, normalize to triangle
+% area
+tri_area_greater_zero = tri_area(logic);
+[N, edges, bins] = histcounts(tri_m(logic));
+x1 = edges(1:end-1) + (edges(2)-edges(1))/2;
+f1 = zeros(1, length(x1));
+for i = 1:length(x1)
+    f1(i) = N(i)*mean(tri_area_greater_zero(bins==i));
+end
+% Get histogram of negative x points, normalize to triangle
+% area
+tri_area_smaller_zero = tri_area(~logic);
+[N, edges, bins] = histcounts(tri_m(~logic));
+x2 = edges(1:end-1) + (edges(2)-edges(1))/2;
+f2 = zeros(1, length(x2));
+for i = 1:length(x2)
+    f2(i) = N(i)*mean(tri_area_smaller_zero(bins==i));
+end
+
+% Interpolate points to the same x domain
+interp_domain = linspace(min([x1(:); x2(:)]),...
+                         max([x1(:); x2(: )]), 50);
+f1_interp = interp1(x1(~isnan(f1)), f1(~isnan(f1)),...
+                    interp_domain, 'spline', 0);
+f2_interp = interp1(x2(~isnan(f2)), f2(~isnan(f2)),...
+                    interp_domain, 'spline', 0);  
+f1_interp = f1_interp/sum(f1_interp);
+f2_interp = f2_interp/sum(f2_interp); 
+% this.overlap{tPoint}{channel} = abs(2-sum(max([f1_interp;f2_interp])));
+this.overlap{tPoint}{channel} = sum(min([f1_interp;f2_interp]));
+
 
 if PLOTTING
     this.plot_triangulation(tPoint);
@@ -84,42 +126,9 @@ if PLOTTING
     % Plot unnormalized histograms of intensity +x and -x
     figure; hold on;
     histogram(tri_m(this.TriangulationCell{tPoint}.tri_c_rot(:, 1) > 0))
-    histogram(tri_m(this.TriangulationCell{tPoint}.tri_c_rot(:, 1) < 0));
+    histogram(tri_m(this.TriangulationCell{tPoint}.tri_c_rot(:, 1) < 0));  
     
-    
-    % Get normalized histograms:
-    
-    logic = this.TriangulationCell{tPoint}.tri_c_rot(:, 1) > 0;
-    % Get histogram of positive x points, normalize to triangle
-    % area
-    tri_area_greater_zero = tri_area(logic);
-    [N, edges, bins] = histcounts(tri_m(logic));
-    x1 = edges(1:end-1) + (edges(2)-edges(1))/2;
-    f1 = zeros(1, length(x1));
-    for i = 1:length(x1)
-        f1(i) = N(i)*mean(tri_area_greater_zero(bins==i));
-    end
-    % Get histogram of negative x points, normalize to triangle
-    % area
-    tri_area_smaller_zero = tri_area(~logic);
-    [N, edges, bins] = histcounts(tri_m(~logic));
-    x2 = edges(1:end-1) + (edges(2)-edges(1))/2;
-    f2 = zeros(1, length(x2));
-    for i = 1:length(x2)
-        f2(i) = N(i)*mean(tri_area_smaller_zero(bins==i));
-    end
-
-    % Interpolate points to the same x domain
-    interp_domain = linspace(min([x1(:); x2(:)]),...
-                             max([x1(:); x2(: )]), 50);
-    f1_interp = interp1(x1(~isnan(f1)), f1(~isnan(f1)),...
-                        interp_domain, 'spline', 0);
-    f2_interp = interp1(x2(~isnan(f2)), f2(~isnan(f2)),...
-                        interp_domain, 'spline', 0);  
-    f1_interp = f1_interp/sum(f1_interp);
-    f2_interp = f2_interp/sum(f2_interp);   
-    
-    % Plotting
+    % Plot normalized histograms interpolated to the same domain
     figure; hold on;
     plot(interp_domain, f1_interp, 'b');
     plot(interp_domain, f2_interp, 'r');

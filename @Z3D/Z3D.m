@@ -6,11 +6,13 @@ classdef Z3D < handle
     %   uint array.
         
 properties
+    Ang;                %Rotation angles for maximum/minimum polarity
     depthCorr;          %Contains vector of length numZSlices to correct for focal depth
     filename;           %filename if data contains disk location
     lineThick = 16;     %line thickness used for segmentations
     numTPoints;         %Number of timepoints
     numZSlices;         %Number of Z-slices
+    overlap;            %Overlap between histograms in find_polarity
     parallel = 0;       %1 - use parfor, 0 - don't use parfor
     resolution;         %Structure, contains .x, .y, .z values for microscope
     saveImagingData;    %Save imaging data
@@ -24,9 +26,13 @@ methods
         if nargin > 0  
             %Set parameters
             this.filename = filename;
-            this.resolution.x = resolution(1);
-            this.resolution.y = resolution(2);
-            this.resolution.z = resolution(3);
+            if isnumeric(resolution)
+                this.resolution.x = resolution(1);
+                this.resolution.y = resolution(2);
+                this.resolution.z = resolution(3);
+            elseif resolution == 'auto'
+                this.read_resolution();
+            end
             this.saveImagingData = 'off';
             %Load data, assign number of planes in Z and T
             this.load_Z3D_Data('internal')
@@ -58,11 +64,12 @@ methods
         end
     end
     
-    find_polarity(this, tPoint, channel, PLOTTING)
     delete_Imaging_Data(this);
+    find_polarity(this, tPoint, channel, PLOTTING);
     load_Z3D_Data(this, mode);
     plot_triangulation(this, tPoint, PLOTHIST);
     ortho(this, color, frame);
+    read_resolution(this);
     show_movie(this, pauseTime, export);
     triangulate_Z3D(this);
     Triangulation = zTriangulation(this, tPoint);
