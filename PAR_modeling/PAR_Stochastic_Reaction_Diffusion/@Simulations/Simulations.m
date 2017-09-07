@@ -23,11 +23,11 @@ classdef Simulations < handle
         function Simu = Simulations(Param_list, num_runs)
             if nargin == 2
                 %Assign standard parameters to use as template later on.
-                Simu.simparams.totalT    = 5000;
+                Simu.simparams.totalT    = 500;
                 Simu.simparams.boundPos  = 100;
                 Simu.simparams.numDom    = 2;
-                Simu.simparams.BoundaryC = 'PER';
-                Simu.simparams.numTpoints= 10;
+                Simu.simparams.BoundaryC = 'REF';
+                Simu.simparams.numTpoints= 100;
                 Simu.params.L        = 134.6;
                 Simu.params.bins     = 135;
                 Simu.params.psi      = 0.174;
@@ -60,7 +60,7 @@ classdef Simulations < handle
     end
     
     methods (Access = public)
-        Simulations = run_simulations(Simu);
+        run_simulations(Simu);
         [param_table_summary, param_table_full] = create_param_table(Simu);
         average_datasets(Simu);
         assign_slopes(Simu);
