@@ -125,8 +125,10 @@ if PLOTTING
     
     % Plot unnormalized histograms of intensity +x and -x
     figure; hold on;
-    histogram(tri_m(this.TriangulationCell{tPoint}.tri_c_rot(:, 1) > 0))
-    histogram(tri_m(this.TriangulationCell{tPoint}.tri_c_rot(:, 1) < 0));  
+    histogram(tri_m(this.TriangulationCell{tPoint}.tri_c_rot(:, 1) > 0),...
+        'FaceColor', 'k', 'Normalization', 'pdf');
+    histogram(tri_m(this.TriangulationCell{tPoint}.tri_c_rot(:, 1) < 0),...
+        'FaceColor', 'k', 'Normalization', 'pdf');
     
     % Plot normalized histograms interpolated to the same domain
     figure; hold on;

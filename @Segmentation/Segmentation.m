@@ -24,7 +24,7 @@ properties
     majorRadius;
     Merge;          %Overlay of the channels
     MergeBuff;      %Merge buffered with zeros to make square
-    merge_factor = 1; %multiplier for channel2 (Im = (ch1 + MF*ch2)/(MF+1))
+    merge_factor = 0.7; %multiplier for channel2 (Im = (ch1 + MF*ch2)/(MF+1))
     midpoint;
     minorRadius;
     mode = 'MaxDiff';
@@ -36,7 +36,7 @@ properties
     project_mode = 'PROJECT' %either 'external', 'internal_no_project', 'PROJECT'
     ROTATE = 1;     %Whether posterior should be rotated to start of outline
     saveImagingData = 'on'; %Save or drop imaging data (stack)
-    straight = 0; %Whether straightening should be performed in constructor
+    straight = 1; %Whether straightening should be performed in constructor
     sz_all;         %Size 
     thresh_corr;    %User corrected final outline
     thresh_diff;    %Threshold as computed by maximum difference method

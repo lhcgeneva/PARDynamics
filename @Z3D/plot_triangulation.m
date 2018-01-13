@@ -45,7 +45,7 @@ if ~isempty(P{1})
     plot_channel(P{1}, cmap, '1', t, p, tPoint, ta);    
 end
 
-% % Plot second channel if available
+% Plot second channel if available
 % if ~isempty(P{2})
 %     cmap = [P{2}, zeros(size(P{2})), zeros(size(P{2}))];
 %     plot_channel(P{2}, cmap, '2', t, p, tPoint, ta);
@@ -83,12 +83,18 @@ function plot_channel(Pi, cmap, channel_string, t, p, tPoint, ta)
 %     fill3(p(t(ind, :), 1), p(t(ind, :), 2), p(t(ind, :), 3), 'y');
 %     colormap(comap);
     
-    % Normal mode, using cmap argument as colormap, normalizing,
-    % thresholding.
     comap = bsxfun(@rdivide, cmap, max(cmap));
-    comap(comap>0.7) = 0.7; %Threshold highest values
-    comap = bsxfun(@rdivide, comap, max(comap));
-    colormap(comap);
+    % Normal mode, using cmap argument as colormap, normalizing,
+    % thresholding, green colormap
+%     comap(comap>0.7) = 0.7; %Threshold highest values
+%     comap = bsxfun(@rdivide, comap, max(comap));
+%     colormap(comap);
+    % Fire colormap (fire function from stackexchange)
+    [~, inds] = sort(comap(:, 2));
+    [~, inds2] = sort(inds);
+    F = fire(length(comap));
+    comap1 = F(inds2, :);
+    colormap(comap1)
 
     % Plot yz plane
     [mgy, mgz] = meshgrid(-10:10, -10:10);

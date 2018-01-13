@@ -4,10 +4,10 @@
 
 //Enter stack dimensions
 Dialog.create("Stack dimensions"); 
-Dialog.addNumber("# Slice in Z:", 11); 
-Dialog.addNumber("# Timepoints:", 20);
+Dialog.addNumber("# Slice in Z:", 21); 
+Dialog.addNumber("# Timepoints:", 30);
 Dialog.addNumber("# Embryos:", 1);
-Dialog.addNumber("# Channels:", 2);
+Dialog.addNumber("# Channels:", 1);
 Dialog.show();
 //Assign variables from dialog
 z 	= Dialog.getNumber();
@@ -23,6 +23,7 @@ channel_counter = 0; //Counts number of total channels that have been stepped th
 //Make substacks
 for(i = 0; i < z*e*c; i++) { 	
 	if (i != z*e*c-1){
+		print(t*z*e*c-t*i);
 		run("Make Substack...", "delete slices=1-"+t*z*e*c-t*i+"-"+(z*e*c-i));
 	}
 
@@ -34,6 +35,6 @@ for(i = 0; i < z*e*c; i++) {
 	if (channel_counter%2 == 0){ch = 2;}
 	else {ch = 1;}
 	
-	saveAs("Tiff", "/Users/hubats01/Desktop/tobedel/Embr" + em + "_Sl" + sl + "Ch" + ch);
+	saveAs("Tiff", "/Users/hubatsl/Desktop/tobedel/Embr" + em + "_Sl" + sl + "Ch" + ch);
 	run("Close");
 }
