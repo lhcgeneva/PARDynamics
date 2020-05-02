@@ -67,7 +67,7 @@ methods
     delete_Imaging_Data(this);
     find_polarity(this, tPoint, channel, PLOTTING);
     load_Z3D_Data(this, mode);
-    plot_triangulation(this, tPoint, PLOTHIST);
+    plot_triangulation(this, tPoint);
     ortho(this, color, frame);
     read_resolution(this);
     show_movie(this, pauseTime, export);
