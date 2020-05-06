@@ -1,0 +1,30 @@
+//input = "/Users/lhcge/temp/";
+//filestring = File.openAsString(input+"lineThick.txt");
+//lineThick = parseInt(filestring);
+//setBatchMode(true); 
+//list = getFileList(input);
+//for (i = 1; i <= list.length/2; i++)
+//        straighten_ROI(i);
+//
+//function straighten_ROI(frameNumber){
+//	open("/Users/lhcge/temp/in_" + frameNumber + ".tif");
+//	run("XY Coordinates... ", "open=/Users/lhcge/temp/" + frameNumber + ".txt");
+//	run("Area to Line");
+//	run("Straighten...", "title=_" + frameNumber + ".tif line="+lineThick);
+//	run("Save", "save=/Users/lhcge/temp_out/" + frameNumber + ".tif");
+//}
+
+input = "/Users/lhcge/temp/";
+filestring = File.openAsString(input+"lineThick.txt");
+lineThick = parseInt(filestring);
+setBatchMode(true); 
+list = getFileList(input);
+for (i = 1; i <= list.length/2; i++)
+        straighten_ROI(i);
+
+function straighten_ROI(frameNumber){
+    open("/Users/lhcge/temp/in_" + frameNumber + ".tif");
+    runMacro("/Users/lhcge/temp/makeLine"+frameNumber+".txt");
+    run("Straighten...", "title=_" + frameNumber + ".tif line="+lineThick);
+    run("Save", "save=/Users/lhcge/temp_out/" + frameNumber + ".tif");
+}
