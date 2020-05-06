@@ -1,15 +1,16 @@
-function [norm_slope, ind_mid, residuals, dist] = calc_slope(intensity, winSize, polynomialOrder, DOPLOT, ax)
+function [norm_slope, ind_mid, residuals, dist, mouseclick] = calc_slope(intensity, winSize, polynomialOrder, DOPLOT, mouseclick, ax)
 try
     % Set minimum to zero
-    intensity   = intensity-min(intensity);
+    % Apply Savitzky Golay filter twice
+    filtered    = sgolayfilt(double(intensity), polynomialOrder, winSize);
+    filtered    = sgolayfilt(filtered, polynomialOrder, winSize);
+    intensity   = double(intensity-min(filtered));
+    filtered = filtered - min(filtered);
     % Sort, find average for lowest and highest values as well as middle
     sortedInt   = sort(intensity, 'ascend');
     lowerAvg    = mean(sortedInt(1:round(winSize/2)));
     upperAvg    = mean(sortedInt(end-round(winSize/2):end));
     middle      = (lowerAvg+upperAvg)/2;
-    % Apply Savitzky Golay filter twice
-    filtered    = sgolayfilt(double(intensity), polynomialOrder, winSize);
-    filtered    = sgolayfilt(double(filtered), polynomialOrder, winSize);
     % Calculate the difference between neighbours (i.e. derivative with
     % dx=1)
     diff_filt   = diff(filtered);
@@ -29,6 +30,36 @@ try
     dist = right-left;
 %     residuals = filtered(max([ind_mid-winSize, 1]):min([ind_mid+winSize, length(filtered)]))-...
 %                 intensity(max([ind_mid-winSize, 1]):min([ind_mid+winSize, length(filtered)]));
+    % Fit poly1 to pixels around average between highest and lowest
+    % intensity
+    x = 0:length(filtered)-1;
+%     filt = sgolayfilt(intensity, 3, 31);
+%     [~, ind] = min(abs(filt-(max(filt)-min(filt))/2));
+
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%% Uncomment this section if you wish to set the middle  position of the
+    %%% linear fit yourself. The normalized slope will then be stored in
+    %%% norm_slope. In case mouseclick should be provided from stored values 
+    %%% instead of user clicking, add an additional argument mouseclick to the
+    %%% function and comment out the figure creation below
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     figure(1); clf;
+%     plot(x, filtered); hold on;
+%     waitforbuttonpress;
+%     mouseclick = get(gca,'CurrentPoint');
+
+    Xp = mouseclick(2,1);  % X-point
+    Yp = mouseclick(2,2);  % Y-point
+    [~,ind] = min((x-Xp).^2+(filtered-Yp).^2);
+
+    fit_y = intensity(ind-winSize:ind+winSize);
+    fit_x = x(ind-winSize:ind+winSize);
+    f = fit(fit_x', fit_y', 'poly1');
+    plot(x(ind-winSize:ind+winSize), intensity(ind-winSize:ind+winSize));
+    plot(x(ind-winSize:ind+winSize), f(ind-winSize:ind+winSize));
+    norm_slope = f.p1/mean(intensity(ind-winSize:ind+winSize));
+
     try     
         residuals = filtered(ind_mid-round(winSize/4):ind_mid+round(winSize/4))-...
                 intensity(ind_mid-round(winSize/4):ind_mid+round(winSize/4));
@@ -37,7 +68,7 @@ try
         disp('Residuals set to nan');
     end
     if DOPLOT
-        if nargin == 5
+        if nargin == 6
             axes(ax);
         else
             f = figure; hold on;

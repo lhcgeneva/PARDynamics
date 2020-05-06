@@ -33,7 +33,7 @@ parfor k = 1 : le
 %             end
 %             
 %             % Get histogram of negative x points, normalize to triangle
-%             % area
+%             % areas.
 %             tri_area_smaller_zero = tri_area(~logic);
 %             [N, edges, bins] = histcounts(tri_m(~logic));
 %             x2 = edges(1:end-1) + (edges(2)-edges(1))/2;
@@ -125,10 +125,10 @@ if PLOTTING
     
     % Plot unnormalized histograms of intensity +x and -x
     figure; hold on;
-    histogram(tri_m(this.TriangulationCell{tPoint}.tri_c_rot(:, 1) > 0),...
-        'FaceColor', 'k', 'Normalization', 'pdf');
     histogram(tri_m(this.TriangulationCell{tPoint}.tri_c_rot(:, 1) < 0),...
-        'FaceColor', 'k', 'Normalization', 'pdf');
+        'FaceColor', [255/255, 128/255, 0/255], 'Normalization', 'pdf');
+    histogram(tri_m(this.TriangulationCell{tPoint}.tri_c_rot(:, 1) > 0),...
+        'FaceColor', [0/255, 76/255, 153/255], 'Normalization', 'pdf');
     
     % Plot normalized histograms interpolated to the same domain
     figure; hold on;

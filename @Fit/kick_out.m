@@ -2,7 +2,7 @@
 %FOURIER_KICK_OUT Kicks out fit based on fourier transform of residuals
 %   Only takes into account residuals of gradient area. Tries to find
 %   systematic variations by performing an FFT and looking for the largest
-%   value in the spectrum
+%   value in the spectrum.
 
 % Fourier Transformation kick out
     r = Fit.curve(1:length(Fit.fitData))-Fit.fitData';

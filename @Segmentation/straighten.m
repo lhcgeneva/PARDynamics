@@ -46,8 +46,15 @@ for i = start_frame : stop_frame
     elseif Seg.ROTATE == 1
         interpolated_circum = naninterp(Seg.thresh_rot{i});
     end
+    interpolated_circum = interpolated_circum(1:1:length(interpolated_circum), :);
     interpolated_circum = [interpolated_circum; interpolated_circum(1, :)];
-    dlmwrite([num2str(i), '.txt'], interpolated_circum);
+    interpolated_circum = interpolated_circum';
+    interpolated_circum = interpolated_circum(:);
+%     dlmwrite([num2str(i), '.txt'], interpolated_circum); Old version
+%     before area to line bug was discovered, new version:
+    fid = fopen(['makeLine',num2str(i), '.txt'],'wt');
+    st = strjoin(string(interpolated_circum'), ',');
+    fprintf(fid, ['makeLine(', st{1}, ')']);
 end
 Seg.curr_dir = temp;
 dlmwrite('lineThick.txt', Seg.lineThick);
@@ -55,8 +62,14 @@ dlmwrite('lineThick.txt', Seg.lineThick);
 % straighten_ROI.txt into Fiji's plugin folder (not macro folder!) and add
 % Fiji's script folder to the path like so addpath(genpath('/Applications/Fiji.app/scripts'));
 % Also make sure to have mij.jar in Applications/Fiji.app/jars/
-evalc('Miji(false);'); %Miji is wrapped in evalc to suppress unnecessary output
-MIJ.run('straighten ROI');
+% The following work in older versions of Matlab and Fiji (presumably prior
+% to Java update and around ImageJ 1.9
+
+% evalc('Miji(false);'); %Miji is wrapped in evalc to suppress unnecessary output
+% MIJ.run('straighten ROI');
+
+% The following should always work but might be slightly slower
+!/Applications/Fiji.app/Contents/MacOS/ImageJ-macosx --headless --console -macro /Applications/Fiji.app/plugins/straighten_ROI.txt
 cd('~/temp_out');
 for i = start_frame : stop_frame
     S{i} = imread([num2str(i),'.tif'], 'tif');
@@ -68,4 +81,5 @@ try
 catch
     cd('~/Desktop');
 end
+fclose all;
 end

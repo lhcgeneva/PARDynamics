@@ -1,6 +1,6 @@
 function [gof, curve, out, error_code, mean_min, data_max, data_min,...
           curve_Nate, gof_Nate, data_Nate] = ...
-          fit_grad( fitData, fitType, showGraphs, pixelSize )
+          fit_grad( fitData, fitType, showGraphs, pixelSize, secondRound )
 %FIT_GRAD Fits gradient using specified method ('sigma' or 'err')
 %   To implement: comparison between Nate/my method
 
@@ -58,7 +58,7 @@ function [gof, curve, out, error_code, mean_min, data_max, data_min,...
     end
 %     fo = fitoptions() Use only, if no fitoptions should be specified in
 %     the final round of fitting
-    [curve, gof] = fit((1:length(fitdata))', double(fitdata), ft);
+    [curve, gof, out] = fit((1:length(fitdata))', double(fitdata), ft);
     %   [curve, gof] = fit((1:length(fitdata))', fitData, ft);
 %   Plot fit and data 
     if strcmp(showGraphs, 'on')
@@ -67,14 +67,17 @@ function [gof, curve, out, error_code, mean_min, data_max, data_min,...
         set(j, 'visible', showGraphs);
         hold on;
         plot(plot_func(1:length(fitdata))); 
-        pause(0.1);   
+        pause(0.1);
         plot(fitData);
         plot(curve, 'g');
         hold off; 
-        pause(0.1); 
+        pause();
     end
-    
+
 %   Second round of fitting fixing upper and lower points
+if nargin == 5 && secondRound == 0
+    disp('Second round not fit.');
+else
     try
         if strcmp(fitType, 'sigma')
             if strcmp(showGraphs, 'on'); disp('Fitting sigma function'); end
@@ -98,13 +101,23 @@ function [gof, curve, out, error_code, mean_min, data_max, data_min,...
         warning('off', 'curvefit:cfit:subsasgn:coeffsClearingConfBounds');
         if strcmp(fitType, 'err'); curve.s = abs(curve.s); end; %Absolute value of sigma!!!
         x = 1:length(fitdata);
-        k = find(x < curve.c + sqrt(2)*curve.s & x > curve.c - sqrt(2) * curve.s);   
+        try
+            k = find(x < curve.c + 2*round(10/pixelSize)+1 &...
+                     x > curve.c - 2*round(10/pixelSize)+1);
+           % Only fit lower half of the curve
+%             k = find(x < curve.c &...
+%                      x > curve.c - 1.5*round(10/pixelSize)+1);
+        catch
+            k = find(x < curve.c + sqrt(2)*curve.s & x > curve.c - sqrt(2) * curve.s);
+            disp('caught');
+        end
         [curve, gof, out] = fit(x(k)', double(fitdata(k)), ft);
         warning('on', 'curvefit:cfit:subsasgn:coeffsClearingConfBounds');
         if strcmp(showGraphs, 'on'); disp(curve); end
         
         %Plot fit and fitted data in same graph as before (figure j)
         if strcmp(showGraphs, 'on')
+            disp(curve.s);
             hold on;
             plot(x(k)', double(fitdata(k)));
             plot(curve, 'k');
@@ -117,7 +130,7 @@ function [gof, curve, out, error_code, mean_min, data_max, data_min,...
         error_code = 0;
         gof.rsquare = nan;
     end
-
+end
 %% Nate's fitting procedure CORRECTS FOR PIXEL SIZE ALREADY HERE, uses raw data
 %     The fit results between the procedure here and Nate's original code
 %     differ slightly (<0.5% normally), because in Nate's loadmultitif

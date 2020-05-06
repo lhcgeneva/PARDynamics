@@ -7,8 +7,8 @@ z_rad = y_rad;
 precision = 200;
 ang = 45;
 [x, y, z] = ellipsoid(0, 0, 0, x_rad, y_rad, z_rad, precision);
-S = sigmf(x, [-x_rad, 0]);
-S1 = sigmf(x+0*y + 0*z, [-x_rad, 0]);
+S = sigmf(x, [-x_rad/2, 0]);
+% S1 = sigmf(x+0*y + 0*z, [-x_rad, 0]);
 %% Create rotation matrix, get 3*N vector of points of ellipsoid, rotate 
 R = roty(ang);
 sz = size(x);
@@ -64,10 +64,13 @@ subplot(2, 2, 1);
 surf(x, y, z, S, 'EdgeColor','none','LineStyle','none','FaceLighting','phong');
 colormap('jet')
 axis equal
-set(gca,'fontsize',15)
-axis equal
+axis tight
+set(gca, 'FontName', 'Palatino');
+set(gca,'TickDir','out');
+set(gca, 'FontSize', 10, 'LineWidth', 1)
 % Plot tilted ellipsoid with imaging plane
 subplot(2, 2, 2);
+% figure(2);
 hold on;
 surf(x_rotated, y_rotated, z_rotated, S, 'EdgeColor','none','LineStyle','none','FaceLighting','phong');
 shading interp
@@ -77,31 +80,47 @@ surf(X, Y, zeros(size(X)),'EdgeColor','none','LineStyle','none','FaceLighting','
 surf(-X, Y, zeros(size(X)),'EdgeColor','none','LineStyle','none','FaceLighting','phong');
 surf(X, -Y, zeros(size(X)),'EdgeColor','none','LineStyle','none','FaceLighting','phong');
 surf(-X, -Y, zeros(size(X)),'EdgeColor','none','LineStyle','none','FaceLighting','phong');
-whitebg('black')
+% whitebg('black')
 axis equal
 axis tight
-box off
+% box off
+grid on
+set(gca, 'FontName', 'Palatino');
+set(gca,'TickDir','out');
+set(gca, 'FontSize', 10, 'LineWidth', 1)
 a = gca;
-a.XColor = [0.98, 0.844, 0.16];
-a.YColor = [0.98, 0.844, 0.16];
-a.ZColor = [0.98, 0.844, 0.16];
+% a.XColor = [0.98, 0.844, 0.16];
+% a.YColor = [0.98, 0.844, 0.16];
+% a.ZColor = [0.98, 0.844, 0.16];
 view(3);
-set(gca,'fontsize',15)
-subplot(2, 2, 3); 
-plot(S_data(1:end-1), 'LineWidth', 3, 'Color',[0 0.35 1]);
-set(gcf,'color','black')
-set(gca,'fontsize',15)
+subplot(2, 2, 4); hold on;
+plot(S_data(1:end-1), 'LineWidth', 2);
+set(gca, 'FontName', 'Palatino');
+set(gca,'TickDir','out');
+set(gca, 'FontSize', 10, 'LineWidth', 1)
+% set(gcf,'color','black')
 xlabel('Position along embryo (a.u.)');
 ylabel('Concentration (a.u.)');
+
+subplot(2, 2, 3); hold on;
+plot(s_temp(1:end-1), 'LineWidth', 2); %Run first for 0 degrees, then do s_temp=S_data in terminal, then rerun with 45 deg
+set(gca, 'FontName', 'Palatino');
+set(gca,'TickDir','out');
+set(gca, 'FontSize', 10, 'LineWidth', 1)
+% set(gcf,'color','black')
+xlabel('Position along embryo (a.u.)');
+ylabel('Concentration (a.u.)');
+
 box off
 a = gca;
-a.XColor = [0.98, 0.844, 0.16];
-a.YColor = [0.98, 0.844, 0.16];
+% a.XColor = [0.98, 0.844, 0.16];
+% a.YColor = [0.98, 0.844, 0.16];
 % Set colormap
 f = gcf;
 f.Colormap(:, 1) = linspace(0, 1, 64);
 f.Colormap(:, 3) = linspace(1, 0, 64);
 f.Colormap(:, 2) = zeros(64, 1);
 f.Colormap(:, 2) = 0.35*ones(64, 1);
+print('/Users/hubatsl/Desktop/interplay-cell-size/Gradient/ZOrientation', '-dpng', '-r600');
 %% Compute distance between points to correct for curvature
 P = [ points_rotated(:,lin_ind_pos(1:end-1)), fliplr(points_rotated(:,lin_ind_neg(1:end))), ];

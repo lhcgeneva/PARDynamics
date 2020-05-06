@@ -34,7 +34,8 @@ classdef Fit < handle
     end
     
     methods
-        function Fi = Fit(fitData, showGraphs, pixelSize, fitType)           
+        function Fi = Fit(fitData, showGraphs, pixelSize, fitType)     
+            if nargin > 0
             Fi.pixelSize    = pixelSize;
             Fi.fitType      = fitType;
             if nargin ~= 0
@@ -50,6 +51,7 @@ classdef Fit < handle
                                                  showGraphs, Fi.pixelSize);
                 [Fi.SNR, Fi.heightDiff]       = Fi.sigToNoise();    
             end
+            end
         end  
         [SNR, heightDiff] = sigToNoise(Fit);
         plot_Fit(Fit);
@@ -58,7 +60,8 @@ classdef Fit < handle
     
     methods (Static)
         [gof, curve, out, error_code, mean_min, data_max, data_min, ...
-         curve_Nate, gof_Nate, data_Nate] = fit_grad(fitData, fitType, showGraphs, pixelSize) 
+         curve_Nate, gof_Nate, data_Nate] = fit_grad(fitData, fitType,...
+                                        showGraphs, pixelSize, secondRound) 
     end
     
 end

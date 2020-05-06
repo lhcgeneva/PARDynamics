@@ -1,10 +1,11 @@
-userpath('/Users/hubatsl/Desktop/P_lineage_Analysis/PARDynamics/');
-addpath(genpath('/Users/hubatsl/Desktop/Code'));
-addpath(genpath('/Users/hubatsl/Desktop/PARmodelling'));
-addpath(genpath('/Users/hubatsl/Desktop/Analysed'));
-rmpath(genpath('/Users/hubatsl/Desktop/Code/.git'));
-addpath(genpath('/Users/hubatsl/Desktop/P_lineage_Analysis/PARDynamics/'));
-rmpath(genpath('/Users/hubatsl/Desktop/P_lineage_Analysis/PARDynamics/.git'));
+userpath('/Users/lhcge/Desktop/P_lineage_Analysis/PARDynamics/');
+addpath(genpath('/Users/lhcge/Desktop/Code'));
+addpath(genpath('/Users/lhcge/Desktop/PARmodelling'));
+addpath(genpath('/Users/lhcge/Desktop/Analysed'));
+rmpath(genpath('/Users/lhcge/Desktop/Code/.git'));
+addpath(genpath('/Users/lhcge/Desktop/P_lineage_Analysis/PARDynamics/'));
+addpath(genpath('/Users/lhcge/Desktop/P_lineage_Analysis/Figures/'));
+rmpath(genpath('/Users/lhcge/Desktop/P_lineage_Analysis/PARDynamics/.git'));
 
 %   To get FIJI functionality either add Fiji.app to path (Fiji.app has
 %   a .jar called mij-1.3.6-fiji2.jar (or similar depending on the version

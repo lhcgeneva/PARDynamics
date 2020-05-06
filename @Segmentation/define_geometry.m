@@ -18,14 +18,14 @@ if seedingMode == 0
     set(fig,'units','normalized');
     Position = get(fig,'Position');
     set(fig,'Position',[0.1 0.1 Position(3) Position(4)]);
-    while titleExtent(2)<0
-        Position = get(fig,'Position');
-        % Resize the figure. Increase the figure by 5%
-        set(fig,'Position',[Position(1) Position(2) 1.05*Position(3) 1.05*Position(4)])
-        titleExtent = get(ht,'Extent');
-    end
+%     while titleExtent(2)<0
+%         Position = get(fig,'Position');
+%         % Resize the figure. Increase the figure by 5%
+%         set(fig,'Position',[Position(1) Position(2) 1.05*Position(3) 1.05*Position(4)])
+%         titleExtent = get(ht,'Extent');
+%     end
     % Using a version of ginput from about 2005/6, cause most recent one
-    % seems to be buggy (crosshair vanishes after as soon as ginput() is
+    % seems to be buggy (crosshair vanishes as soon as ginput() is
     % called). Also, myginput allows cooler pointer ('crosshair').
     [X, Y] = Segmentation.myginput(4, 'crosshair');
     midpoint=[X(1); Y(1); 1];

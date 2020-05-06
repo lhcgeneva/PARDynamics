@@ -5,7 +5,8 @@ function plot_triangulation(this, tPoint)
 %   range.
 
 t = this.TriangulationCell{tPoint}.t;
-p = this.TriangulationCell{tPoint}.p_rot;
+p = this.TriangulationCell{tPoint}.p_rot; % Use rotated embryo
+% p = this.TriangulationCell{tPoint}.p; % Use original rotation
 ta = this.TriangulationCell{tPoint}.tri_area;
 
 %Normalize to min and max
@@ -41,9 +42,15 @@ P{2} = (P{2}-min(P{2}))/(max(P{2}-min(P{2})));
 
 % Plot first channel if available
 if ~isempty(P{1})
-    cmap = [zeros(size(P{1})), P{1}, zeros(size(P{1}))];
+    cmap = [zeros(size(P{1})), zeros(size(P{1})), P{1}];
     plot_channel(P{1}, cmap, '1', t, p, tPoint, ta);    
 end
+
+% Or plot second channel, comment out accordingly
+% if ~isempty(P{2})
+%     cmap = [zeros(size(P{2})), P{2}, zeros(size(P{2}))];
+%     plot_channel(P{2}, cmap, '1', t, p, tPoint, ta);    
+% end
 
 % Plot second channel if available
 % if ~isempty(P{2})
@@ -56,8 +63,8 @@ function plot_channel(Pi, cmap, channel_string, t, p, tPoint, ta)
     figure;
     hold on;
     cdata = 1:length(Pi);
-    title(['Channel ', num2str(channel_string), ' timepoint ',...
-            num2str(tPoint)], 'fontsize', 14);
+%     title(['Channel ', num2str(channel_string), ' timepoint ',...
+%             num2str(tPoint)], 'fontsize', 14);
     axis equal;
     h1 = trisurf(t(:, :),p(:,1),p(:,2),p(:,3), cdata);   
     view(3);
@@ -90,20 +97,31 @@ function plot_channel(Pi, cmap, channel_string, t, p, tPoint, ta)
 %     comap = bsxfun(@rdivide, comap, max(comap));
 %     colormap(comap);
     % Fire colormap (fire function from stackexchange)
-    [~, inds] = sort(comap(:, 2));
+    [~, inds] = sort(comap(:, 3));
     [~, inds2] = sort(inds);
     F = fire(length(comap));
     comap1 = F(inds2, :);
     colormap(comap1)
 
-    % Plot yz plane
+%     Plot yz plane
     [mgy, mgz] = meshgrid(-10:10, -10:10);
-    surf(zeros(size(mgy)), mgy, mgz, 'FaceColor', 'b', 'EdgeColor', 'none',...
+    fc = [247/255 214/255 31/255];
+    fc = 'b';
+    surf(zeros(size(mgy)), mgy, mgz, 'FaceColor', fc, 'EdgeColor', 'none',...
          'FaceAlpha',0.5)
 
-    az = 47;
-    el = 8;
+    az = -16;
+    el = 33;
     view(az, el); 
+    
+    % For presentation, then go to Photoshop and adjust 'Selective color'
+    % to blue, 100% cyan, -62 % magenta
+%     ax = gca;
+%     ax.Color = 'black';
+%     g = gcf;
+%     g.PaperPosition = [0 0 1.5*4.0 1.5*3.1];
+%     g.InvertHardcopy = 'off';
+%     g.Color = 'black';
 end
 
 

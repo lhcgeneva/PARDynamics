@@ -33,7 +33,7 @@ methods
             elseif resolution == 'auto'
                 this.read_resolution();
             end
-            this.saveImagingData = 'off';
+            this.saveImagingData = 'on';
             %Load data, assign number of planes in Z and T
             this.load_Z3D_Data('internal')
             sz = size(this.stackCell{1});

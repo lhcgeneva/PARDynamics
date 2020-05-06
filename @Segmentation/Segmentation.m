@@ -24,7 +24,7 @@ properties
     majorRadius;
     Merge;          %Overlay of the channels
     MergeBuff;      %Merge buffered with zeros to make square
-    merge_factor = 0.7; %multiplier for channel2 (Im = (ch1 + MF*ch2)/(MF+1))
+    merge_factor = 2; %multiplier for channel2 (Im = (ch1 + MF*ch2)/(MF+1))
     midpoint;
     minorRadius;
     mode = 'MaxDiff';

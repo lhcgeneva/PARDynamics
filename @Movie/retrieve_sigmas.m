@@ -1,7 +1,10 @@
 function S = retrieve_sigmas(Mo, retrievingRange)
 %RETRIEVE_SIGMAS Takes array of indices, retrieves sigmas from Side1/2
 %   Also gets length if available from folder (Segmentation location)
+    Mo.retrievedSigmas = [];
+    Mo.retrievedSigmasAv = nan;
     try
+        Mo.retrievedSigmas = nan;
         Mo.retrievingRange = retrievingRange;
         %Get Sigmas
         QueryFits1 = [Mo.Side1{[end-retrievingRange(1),...
