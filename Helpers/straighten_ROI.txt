@@ -14,7 +14,7 @@
 //	run("Save", "save=/Users/lhcge/temp_out/" + frameNumber + ".tif");
 //}
 
-input = "/Users/lhcge/temp/";
+input = "/Users/hubatsch/temp/";
 filestring = File.openAsString(input+"lineThick.txt");
 lineThick = parseInt(filestring);
 setBatchMode(true); 
@@ -23,8 +23,8 @@ for (i = 1; i <= list.length/2; i++)
         straighten_ROI(i);
 
 function straighten_ROI(frameNumber){
-    open("/Users/lhcge/temp/in_" + frameNumber + ".tif");
-    runMacro("/Users/lhcge/temp/makeLine"+frameNumber+".txt");
+    open("/Users/hubatsch/temp/in_" + frameNumber + ".tif");
+    runMacro("/Users/hubatsch/temp/makeLine"+frameNumber+".txt");
     run("Straighten...", "title=_" + frameNumber + ".tif line="+lineThick);
-    run("Save", "save=/Users/lhcge/temp_out/" + frameNumber + ".tif");
+    run("Save", "save=/Users/hubatsch/temp_out/" + frameNumber + ".tif");
 }

@@ -52,7 +52,7 @@ methods
     function Seg = Segmentation(file, seg_prec, lineThick, lut)
         if nargin > 0
             % Assign constructor inputs to properties
-            if nargin == 7; Seg.lut = lut; end
+            if nargin == 4; Seg.lut = lut; end
             Seg.curr_dir = pwd;
             Seg.seg_prec = seg_prec;
             Seg.lineThick = lineThick;
