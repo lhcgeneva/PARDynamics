@@ -28,7 +28,7 @@ properties
     merge_factor = 2; %multiplier for channel2 (Im = (ch1 + MF*ch2)/(MF+1))
     midpoint;
     minorRadius;
-    mode = 'MaxDiffCircle';
+    mode = 'MaxDiff';
     posteriorPos;
     prec_diff = 10;
     prec_max = 5;
@@ -66,7 +66,8 @@ methods
             
             % Plot final segmentations, write padded imaging files to disk.
             Seg.thresh_corr = Seg.thresh_final;
-            h = imageGUI(Seg);
+%             h = imageGUI(Seg);
+            h = imageGUI_App(Seg);
             waitfor(h);
             
             % Check, whether straightening should be performed within

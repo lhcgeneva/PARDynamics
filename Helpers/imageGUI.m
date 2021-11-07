@@ -22,7 +22,7 @@ function varargout = imageGUI(varargin)
 
 % Edit the above text to modify the response to help imageGUI
 
-% Last Modified by GUIDE v2.5 03-Aug-2017 13:02:01
+% Last Modified by GUIDE v2.5 07-Nov-2021 18:31:47
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -276,3 +276,12 @@ function ResetLUT_Callback(hObject, eventdata, handles)
 imageNum = floor(get(handles.imageSlider,'Value'));
 handles.S.lut = [];
 plot_seg(handles, imageNum);
+
+
+% --- Executes on button press in checkbox6.
+function checkbox6_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox6
