@@ -16,6 +16,7 @@ properties
     
     %Other properties
     channels;       %Imaging channels
+    circle_props;   %Properties of circle, if mode contains 'Circle'
     curr_dir;       %Current directory (base for all file operations)
     dist_mid_max;   %Distance from midpoint to outline for each point 
     dist_mid_diff;  %Same for difference method
@@ -27,7 +28,7 @@ properties
     merge_factor = 2; %multiplier for channel2 (Im = (ch1 + MF*ch2)/(MF+1))
     midpoint;
     minorRadius;
-    mode = 'MaxDiff';
+    mode = 'MaxDiffCircle';
     posteriorPos;
     prec_diff = 10;
     prec_max = 5;
@@ -36,7 +37,7 @@ properties
     project_mode = 'PROJECT' %either 'external', 'internal_no_project', 'PROJECT'
     ROTATE = 1;     %Whether posterior should be rotated to start of outline
     saveImagingData = 'on'; %Save or drop imaging data (stack)
-    straight = 1; %Whether straightening should be performed in constructor
+    straight = 0; %Whether straightening should be performed in constructor
     sz_all;         %Size 
     thresh_corr;    %User corrected final outline
     thresh_diff;    %Threshold as computed by maximum difference method
