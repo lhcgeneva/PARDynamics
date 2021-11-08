@@ -28,7 +28,7 @@ properties
     merge_factor = 2; %multiplier for channel2 (Im = (ch1 + MF*ch2)/(MF+1))
     midpoint;
     minorRadius;
-    mode = 'MaxDiff';
+    mode = 'MaxDiffCircle';
     posteriorPos;
     prec_diff = 10;
     prec_max = 5;
@@ -101,7 +101,7 @@ methods(Static)
     [midpoint, minorRadius, majorRadius, g_handle, MergeBuff] = ...
                           define_geometry(MergeBuff, seedingMode, lut);
     dist                = dist_point_array(point, array);
-    [out1,out2,out3]    = myginput(arg1, strpointertype); 
+    [out1,out2,out3]    = myginput(arg1, strpointertype);
                           plot_kymo(Imr_s, s, ax);
     [channels, merge]   = read_stack(Seg, filename );
     data_smooth         = smooth_periodic(data, window);

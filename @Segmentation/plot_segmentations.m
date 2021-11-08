@@ -57,6 +57,13 @@ if ~isempty(Seg.thresh_corr{frame}) && sum(ismember(mode, 'CORR')) == 1
     plot(Seg.thresh_corr{frame}(:, 1), Seg.thresh_corr{frame}(:, 2), 'm.', ...
         'MarkerSize', 30);
 end
+
+if ~isempty(Seg.circle_props.r(frame)) && sum(ismember(mode, 'CIRCLE')) == 1
+    drawcircle('Center', [Seg.circle_props.cen_col(frame),...
+               Seg.circle_props.cen_row(frame)], 'Radius',...
+               Seg.circle_props.r(frame));
+    shg;
+end
 hold off;
 end
 

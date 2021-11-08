@@ -29,9 +29,12 @@ if contains(Seg.mode, 'Circle')
     pause()
     roi_cen = roi.Center;
     r = roi.Radius;
-    cost = zeros(11, 11);
     cen_col = roi_cen(1);
     cen_row = roi_cen(2);
+    Seg.circle_props.cen_row(1) = cen_row*step;
+    Seg.circle_props.cen_col(1) = cen_col*step;
+    Seg.circle_props.r(1) = r*step;
+    cost = zeros(11, 11);
     cs = zeros(sz(3), 2);
     cs(1, :) = [cen_col, cen_row];
     n = vq(cen_row-r:cen_row+r, cen_col-r:cen_col+r, 1);
@@ -52,13 +55,9 @@ if contains(Seg.mode, 'Circle')
         cen_row = cen_row + row - 6;
         cen_col = cen_col + col - 6;
         cs(im+1, :) = [cen_col, cen_row];
-        Seg.circle_props.cen_row(im+1) = cen_row;
-        Seg.circle_props.cen_col(im+1) = cen_col;
-        Seg.circle_props.r(im+1) = r;
-%         imshow(vq_orig(:, :, im+1), []);
-%         drawcircle('Center', [cen_col, cen_row], 'Radius', r);
-%         shg;
-%         pause()
+        Seg.circle_props.cen_row(im+1) = cen_row*step;
+        Seg.circle_props.cen_col(im+1) = cen_col*step;
+        Seg.circle_props.r(im+1) = r*step;
     end
 end
 
@@ -177,7 +176,7 @@ for jj = 1 : Seg.sz_all(3)
                 Seg.thresh_diff{jj}(i, :) = outline_point_orig(1:2);
             end                
         end
-    end
+    end 
 end
 end
 
