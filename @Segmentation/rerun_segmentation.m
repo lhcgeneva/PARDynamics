@@ -15,5 +15,9 @@ h = imageGUI(Seg);
 waitfor(h);
 Seg.Imr_s{1} = Seg.straighten(Seg.channels{1});
 Seg.Imr_s{2} = Seg.straighten(Seg.channels{2});
+if Seg.straight
+    Seg.Imr_s{1} = Seg.straighten(Seg.channels{1});
+    Seg.Imr_s{2} = Seg.straighten(Seg.channels{2});
+end
 
 end
