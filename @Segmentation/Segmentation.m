@@ -87,6 +87,7 @@ methods
     correct_segmentation(Seg, index, IsPropagated);
     create_final_outline(Seg); 
     delete_Data(Seg);
+    export_circle(Seg);
     export_thresh_corr(Seg);
     load_data(Seg, file, project_mode);
     plot_segmentations(Seg, frame, mode);
