@@ -25,9 +25,9 @@ row_q = (step/2:step:sz(1))';
 col_q = (step/2:step:sz(2))';
 vq = F({row_q, col_q, t});
 vq_orig = F_orig({row_q, col_q, t});
-figure; hold on; imshow(vq_orig(:, :, 1), []);
 
 % Get hand-drawn circle
+figure; hold on; imshow(vq_orig(:, :, slice_num), []);
 roi = drawcircle;
 pause()
 roi_cen = roi.Center;
