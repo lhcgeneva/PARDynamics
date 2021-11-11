@@ -29,17 +29,19 @@ Seg.circle_props.cen_col(sliceNum) = cen_col*step;
 Seg.circle_props.r(sliceNum) = r*step;
 cost = zeros(11, 11);
 cs = zeros(sz(3), 2);
-cs(1, :) = [cen_col, cen_row];
-n = vq(cen_row-r:cen_row+r, cen_col-r:cen_col+r, 1);
-for im = 1:Seg.sz_all(3)-1
+cs(sliceNum, :) = [cen_col, cen_row];
+n = vq(round(cen_row-r):round(cen_row+r),...
+       round(cen_col-r):round(cen_col+r), 1);
+for im = sliceNum:Seg.sz_all(3)-1
     % maybe assigning n here works for better resolution?
 %         n = vq(cen_row-r:cen_row+r, cen_col-r:cen_col+r, im); 
     for i = 1:11
         for j = 1:11
             shift_row = i-6;
             shift_col = j-6;
-            n_1 = vq(cen_row-r+shift_row:cen_row+r+shift_row,...
-                       cen_col-r+shift_col:cen_col+r+shift_col, im+1);
+            n_1 = vq(round(cen_row-r+shift_row):round(cen_row+r+shift_row),...
+                     round(cen_col-r+shift_col):round(cen_col+r+shift_col),...
+                     im+1);
             cost(i, j) = sum((n-n_1).^2, 'all');
         end
     end
