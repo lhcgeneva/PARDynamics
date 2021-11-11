@@ -6,7 +6,7 @@ dist_mid{Seg.sz_all(3)} = zeros(Seg.seg_prec, 1);
 outline{Seg.sz_all(3)} = zeros(Seg.seg_prec, 2);
 
 if contains(Seg.mode, 'Circle')
-    register_circle(Seg);
+    register_circle(Seg, 1);
 end
 
 for jj = 1 : Seg.sz_all(3)

@@ -1,5 +1,4 @@
-function register_circle(Seg)
-
+function register_circle(Seg, sliceNum)
 ti = reshape(cell2mat(cellfun(@uint16, Seg.channels{1},...
                  'Uni', false)), Seg.sz_all);
 sz = size(ti);
@@ -25,9 +24,9 @@ roi_cen = roi.Center;
 r = roi.Radius;
 cen_col = roi_cen(1);
 cen_row = roi_cen(2);
-Seg.circle_props.cen_row(1) = cen_row*step;
-Seg.circle_props.cen_col(1) = cen_col*step;
-Seg.circle_props.r(1) = r*step;
+Seg.circle_props.cen_row(sliceNum) = cen_row*step;
+Seg.circle_props.cen_col(sliceNum) = cen_col*step;
+Seg.circle_props.r(sliceNum) = r*step;
 cost = zeros(11, 11);
 cs = zeros(sz(3), 2);
 cs(1, :) = [cen_col, cen_row];

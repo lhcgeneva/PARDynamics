@@ -11,10 +11,8 @@ if nargin == 2 && userInput
     Seg.create_final_outline();
     Seg.thresh_corr = Seg.thresh_final;
 end
-h = imageGUI(Seg);
+h = imageGUI_App(Seg);
 waitfor(h);
-Seg.Imr_s{1} = Seg.straighten(Seg.channels{1});
-Seg.Imr_s{2} = Seg.straighten(Seg.channels{2});
 if Seg.straight
     Seg.Imr_s{1} = Seg.straighten(Seg.channels{1});
     Seg.Imr_s{2} = Seg.straighten(Seg.channels{2});
