@@ -15,14 +15,14 @@ end
 ti_edge = imgaussfilt(double(ti_edge), 2);
 
 % Interpolate image for finer registration resolution
-row = 0.5:sz(1)-0.5;
-col = 0.5:sz(2)-0.5;
+row = 1:sz(1);
+col = 1:sz(2);
 t = (1:sz(3))';
 F = griddedInterpolant({row,col,t}, double(ti_edge));
 F_orig = griddedInterpolant({row,col,t}, double(ti));
 step = 0.125;
-row_q = (step/2:step:sz(1))';
-col_q = (step/2:step:sz(2))';
+row_q = (step/2:step:sz(1)-step/2)' + 0.5; % first pixel starts at 0.5 in ML
+col_q = (step/2:step:sz(2)-step/2)' + 0.5;
 vq = F({row_q, col_q, t});
 vq_orig = F_orig({row_q, col_q, t});
 
@@ -34,8 +34,11 @@ roi_cen = roi.Center;
 r = roi.Radius;
 cen_col = roi_cen(1);
 cen_row = roi_cen(2);
-Seg.circle_props.cen_row(sliceNum) = cen_row*step;
-Seg.circle_props.cen_col(sliceNum) = cen_col*step;
+disp([cen_row, cen_col]);
+
+% Need back-transformation into original (non-interpolated) coordinates
+Seg.circle_props.cen_row(sliceNum) = (cen_row-0.5)*step+0.5;
+Seg.circle_props.cen_col(sliceNum) = (cen_col-0.5)*step+0.5;
 Seg.circle_props.r(sliceNum) = r*step;
 
 % Do registration
@@ -63,7 +66,7 @@ for im = sliceNum:Seg.sz_all(3)-1
     cen_row = cen_row + row - range+1;
     cen_col = cen_col + col - range+1;
     cs(im+1, :) = [cen_col, cen_row];
-    Seg.circle_props.cen_row(im+1) = cen_row*step;
-    Seg.circle_props.cen_col(im+1) = cen_col*step;
+    Seg.circle_props.cen_row(im+1) = (cen_row-0.5)*step+0.5;
+    Seg.circle_props.cen_col(im+1) = (cen_col-0.5)*step+0.5;
     Seg.circle_props.r(im+1) = r*step;
 end
