@@ -44,13 +44,14 @@ cs = zeros(sz(3), 2);
 cs(sliceNum, :) = [cen_col, cen_row];
 n = vq(round(cen_row-r):round(cen_row+r),...
        round(cen_col-r):round(cen_col+r), 1);
+range = 10;
 for im = sliceNum:Seg.sz_all(3)-1
     % maybe assigning n here works for better resolution?
 %         n = vq(cen_row-r:cen_row+r, cen_col-r:cen_col+r, im); 
-    for i = 1:11
-        for j = 1:11
-            shift_row = i-6;
-            shift_col = j-6;
+    for i = 1:2*range+1
+        for j = 1:2*range+1
+            shift_row = i-range+1;
+            shift_col = j-range+1;
             n_1 = vq(round(cen_row-r+shift_row):round(cen_row+r+shift_row),...
                      round(cen_col-r+shift_col):round(cen_col+r+shift_col),...
                      im+1);
@@ -59,8 +60,8 @@ for im = sliceNum:Seg.sz_all(3)-1
     end
     [~,I] = min(cost,[],'all', 'linear');
     [row, col] = ind2sub(size(cost), I);
-    cen_row = cen_row + row - 6;
-    cen_col = cen_col + col - 6;
+    cen_row = cen_row + row - range+1;
+    cen_col = cen_col + col - range+1;
     cs(im+1, :) = [cen_col, cen_row];
     Seg.circle_props.cen_row(im+1) = cen_row*step;
     Seg.circle_props.cen_col(im+1) = cen_col*step;
