@@ -27,7 +27,7 @@ vq = F({row_q, col_q, t});
 vq_orig = F_orig({row_q, col_q, t});
 
 % Get hand-drawn circle
-figure; hold on; imshow(vq_orig(:, :, slice_num), []);
+figure; hold on; imshow(vq_orig(:, :, sliceNum), []);
 roi = drawcircle;
 pause()
 roi_cen = roi.Center;
