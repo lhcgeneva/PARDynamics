@@ -20,7 +20,7 @@ col = 1:sz(2);
 t = (1:sz(3))';
 F = griddedInterpolant({row,col,t}, double(ti_edge));
 F_orig = griddedInterpolant({row,col,t}, double(ti));
-step = 0.125;
+step = 0.5;
 row_q = (step/2:step:sz(1)-step/2)' + 0.5; % first pixel starts at 0.5 in ML
 col_q = (step/2:step:sz(2)-step/2)' + 0.5;
 vq = F({row_q, col_q, t});
@@ -47,10 +47,11 @@ cs = zeros(sz(3), 2);
 cs(sliceNum, :) = [cen_col, cen_row];
 n = vq(round(cen_row-r):round(cen_row+r),...
        round(cen_col-r):round(cen_col+r), 1);
-range = 10;
+range = 14;
 for im = sliceNum:Seg.sz_all(3)-1
     % maybe assigning n here works for better resolution?
-%         n = vq(cen_row-r:cen_row+r, cen_col-r:cen_col+r, im); 
+%     n = vq(round(cen_row-r):round(cen_row+r),...
+%            round(cen_col-r):round(cen_col+r), im);
     for i = 1:2*range+1
         for j = 1:2*range+1
             shift_row = i-range+1;
@@ -58,7 +59,7 @@ for im = sliceNum:Seg.sz_all(3)-1
             n_1 = vq(round(cen_row-r+shift_row):round(cen_row+r+shift_row),...
                      round(cen_col-r+shift_col):round(cen_col+r+shift_col),...
                      im+1);
-            cost(i, j) = sum((n-n_1).^2, 'all');
+            cost(i, j) = sum((n/mean(n, 'all')-n_1/mean(n_1, 'all')).^2, 'all');
         end
     end
     [~,I] = min(cost,[],'all', 'linear');
