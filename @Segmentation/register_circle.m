@@ -1,4 +1,4 @@
-function register_circle(Seg, sliceNum)
+function register_circle(Seg, sliceNum, ~)
 % REGISTER_CIRCLE manually draw circle around droplet, subsequent automatic
 % registration by brute force matrix shifting.
 
@@ -26,16 +26,22 @@ col_q = (step/2:step:sz(2)-step/2)' + 0.5;
 vq = F({row_q, col_q, t});
 vq_orig = F_orig({row_q, col_q, t});
 
-% Get hand-drawn circle
-figure; hold on; imshow(vq_orig(:, :, sliceNum), []);
-roi = drawcircle;
-pause()
-roi_cen = roi.Center;
-r = roi.Radius;
-cen_col = roi_cen(1);
-cen_row = roi_cen(2);
-disp([cen_row, cen_col]);
-
+if nargin == 2
+    % Get hand-drawn circle
+    figure; hold on; imshow(vq_orig(:, :, sliceNum), []);
+    roi = drawcircle;
+    pause()
+    roi_cen = roi.Center;
+    r = roi.Radius;
+    cen_col = roi_cen(1);
+    cen_row = roi_cen(2);
+    disp([cen_row, cen_col]);
+elseif nargin == 3
+    % Get circle that's already drawn in GUI
+    r = Seg.circle_props.roi.Radius/step;
+    cen_col = (Seg.circle_props.roi.Center(1)-0.5)/step+0.5;
+    cen_row = (Seg.circle_props.roi.Center(2)-0.5)/step+0.5;
+end
 % Need back-transformation into original (non-interpolated) coordinates
 Seg.circle_props.cen_row(sliceNum) = (cen_row-0.5)*step+0.5;
 Seg.circle_props.cen_col(sliceNum) = (cen_col-0.5)*step+0.5;
@@ -71,3 +77,5 @@ for im = sliceNum:Seg.sz_all(3)-1
     Seg.circle_props.cen_col(im+1) = (cen_col-0.5)*step+0.5;
     Seg.circle_props.r(im+1) = r*step;
 end
+
+disp('Registration done.');

@@ -91,7 +91,7 @@ methods
     export_thresh_corr(Seg);
     load_data(Seg, file, project_mode);
     plot_segmentations(Seg, frame, mode);
-    register_circle(Seg, sliceNum);
+    register_circle(Seg, sliceNum, ~);
     rerun_segmentation(Seg, INPUT);
     segment_cell(Seg, prec, g, mode);
     set_geometry(Seg, mode)
